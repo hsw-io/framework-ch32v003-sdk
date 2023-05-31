@@ -10,11 +10,11 @@
 ;* microcontroller manufactured by Nanjing Qinheng Microelectronics.
 ;*******************************************************************************/
 
-	.section  .init, "ax", @progbits
-	.globl  _start
-	.align  2
+    .section  .init, "ax", @progbits
+    .globl  _start
+    .align  2
 _start:
-	.option   norvc;
+    .option   norvc;
     j       handle_reset
     .word   0
     .word   NMI_Handler                  /* NMI Handler */
@@ -32,59 +32,59 @@ _start:
     .word   SW_Handler                  /* SW Handler */
     .word   0
     /* External Interrupts */
-    .word   WWDG_IRQHandler         	/* Window Watchdog */
-    .word   PVD_IRQHandler          	/* PVD through EXTI Line detect */
-    .word   FLASH_IRQHandler        	/* Flash */
-    .word   RCC_IRQHandler          	/* RCC */
-    .word   EXTI7_0_IRQHandler       	/* EXTI Line 7..0 */
+    .word   WWDG_IRQHandler             /* Window Watchdog */
+    .word   PVD_IRQHandler              /* PVD through EXTI Line detect */
+    .word   FLASH_IRQHandler            /* Flash */
+    .word   RCC_IRQHandler              /* RCC */
+    .word   EXTI7_0_IRQHandler          /* EXTI Line 7..0 */
     .word   AWU_IRQHandler              /* AWU */
-    .word   DMA1_Channel1_IRQHandler   	/* DMA1 Channel 1 */
-    .word   DMA1_Channel2_IRQHandler   	/* DMA1 Channel 2 */
-    .word   DMA1_Channel3_IRQHandler   	/* DMA1 Channel 3 */
-    .word   DMA1_Channel4_IRQHandler   	/* DMA1 Channel 4 */
-    .word   DMA1_Channel5_IRQHandler   	/* DMA1 Channel 5 */
-    .word   DMA1_Channel6_IRQHandler   	/* DMA1 Channel 6 */
-    .word   DMA1_Channel7_IRQHandler   	/* DMA1 Channel 7 */
-    .word   ADC1_IRQHandler          	/* ADC1 */
-    .word   I2C1_EV_IRQHandler         	/* I2C1 Event */
-    .word   I2C1_ER_IRQHandler         	/* I2C1 Error */
-    .word   USART1_IRQHandler          	/* USART1 */
-	.word   SPI1_IRQHandler            	/* SPI1 */
-	.word   TIM1_BRK_IRQHandler        	/* TIM1 Break */
-    .word   TIM1_UP_IRQHandler         	/* TIM1 Update */
-    .word   TIM1_TRG_COM_IRQHandler    	/* TIM1 Trigger and Commutation */
-    .word   TIM1_CC_IRQHandler         	/* TIM1 Capture Compare */
-    .word   TIM2_IRQHandler            	/* TIM2 */
+    .word   DMA1_Channel1_IRQHandler    /* DMA1 Channel 1 */
+    .word   DMA1_Channel2_IRQHandler    /* DMA1 Channel 2 */
+    .word   DMA1_Channel3_IRQHandler    /* DMA1 Channel 3 */
+    .word   DMA1_Channel4_IRQHandler    /* DMA1 Channel 4 */
+    .word   DMA1_Channel5_IRQHandler    /* DMA1 Channel 5 */
+    .word   DMA1_Channel6_IRQHandler    /* DMA1 Channel 6 */
+    .word   DMA1_Channel7_IRQHandler    /* DMA1 Channel 7 */
+    .word   ADC1_IRQHandler             /* ADC1 */
+    .word   I2C1_EV_IRQHandler          /* I2C1 Event */
+    .word   I2C1_ER_IRQHandler          /* I2C1 Error */
+    .word   USART1_IRQHandler           /* USART1 */
+    .word   SPI1_IRQHandler             /* SPI1 */
+    .word   TIM1_BRK_IRQHandler         /* TIM1 Break */
+    .word   TIM1_UP_IRQHandler          /* TIM1 Update */
+    .word   TIM1_TRG_COM_IRQHandler     /* TIM1 Trigger and Commutation */
+    .word   TIM1_CC_IRQHandler          /* TIM1 Capture Compare */
+    .word   TIM2_IRQHandler             /* TIM2 */
 
-	.option rvc;
-	.section  .text.vector_handler, "ax", @progbits
-	.weak   NMI_Handler
-	.weak   HardFault_Handler
-	.weak   SysTick_Handler
-	.weak   SW_Handler
-	.weak   WWDG_IRQHandler
-	.weak   PVD_IRQHandler
-	.weak   FLASH_IRQHandler
-	.weak   RCC_IRQHandler
-	.weak   EXTI7_0_IRQHandler
-	.weak   AWU_IRQHandler
-	.weak   DMA1_Channel1_IRQHandler
-	.weak   DMA1_Channel2_IRQHandler
-	.weak   DMA1_Channel3_IRQHandler
-	.weak   DMA1_Channel4_IRQHandler
-	.weak   DMA1_Channel5_IRQHandler
-	.weak   DMA1_Channel6_IRQHandler
-	.weak   DMA1_Channel7_IRQHandler
-	.weak   ADC1_IRQHandler
-	.weak   I2C1_EV_IRQHandler
-	.weak   I2C1_ER_IRQHandler
-	.weak   USART1_IRQHandler
-	.weak   SPI1_IRQHandler
-	.weak   TIM1_BRK_IRQHandler
-	.weak   TIM1_UP_IRQHandler
-	.weak   TIM1_TRG_COM_IRQHandler
-	.weak   TIM1_CC_IRQHandler
-	.weak   TIM2_IRQHandler
+    .option rvc;
+    .section  .text.vector_handler, "ax", @progbits
+    .weak   NMI_Handler
+    .weak   HardFault_Handler
+    .weak   SysTick_Handler
+    .weak   SW_Handler
+    .weak   WWDG_IRQHandler
+    .weak   PVD_IRQHandler
+    .weak   FLASH_IRQHandler
+    .weak   RCC_IRQHandler
+    .weak   EXTI7_0_IRQHandler
+    .weak   AWU_IRQHandler
+    .weak   DMA1_Channel1_IRQHandler
+    .weak   DMA1_Channel2_IRQHandler
+    .weak   DMA1_Channel3_IRQHandler
+    .weak   DMA1_Channel4_IRQHandler
+    .weak   DMA1_Channel5_IRQHandler
+    .weak   DMA1_Channel6_IRQHandler
+    .weak   DMA1_Channel7_IRQHandler
+    .weak   ADC1_IRQHandler
+    .weak   I2C1_EV_IRQHandler
+    .weak   I2C1_ER_IRQHandler
+    .weak   USART1_IRQHandler
+    .weak   SPI1_IRQHandler
+    .weak   TIM1_BRK_IRQHandler
+    .weak   TIM1_UP_IRQHandler
+    .weak   TIM1_TRG_COM_IRQHandler
+    .weak   TIM1_CC_IRQHandler
+    .weak   TIM2_IRQHandler
 
 NMI_Handler:              1: j 1b
 HardFault_Handler:        1: j 1b
@@ -115,28 +115,28 @@ TIM1_CC_IRQHandler:       1: j 1b
 TIM2_IRQHandler:          1: j 1b
 
 
-	.section  .text.handle_reset, "ax", @progbits
-	.weak     handle_reset
-	.align    1
+    .section  .text.handle_reset, "ax", @progbits
+    .weak     handle_reset
+    .align    1
 handle_reset:
 .option push
 .option norelax
-	la gp, __global_pointer$
+    la gp, __global_pointer$
 .option pop
 1:
-	la sp, _eusrstack
+    la sp, _eusrstack
 2:
-	/* Load data section from flash to RAM */
-	la a0, _data_lma
-	la a1, _data_vma
-	la a2, _edata
-	bgeu a1, a2, 2f
+    /* Load data section from flash to RAM */
+    la a0, _data_lma
+    la a1, _data_vma
+    la a2, _edata
+    bgeu a1, a2, 2f
 1:
-	lw t0, (a0)
-	sw t0, (a1)
-	addi a0, a0, 4
-	addi a1, a1, 4
-	bltu a1, a2, 1b
+    lw t0, (a0)
+    sw t0, (a1)
+    addi a0, a0, 4
+    addi a1, a1, 4
+    bltu a1, a2, 1b
 2:
     /* clear bss section */
     la a0, _sbss
@@ -149,25 +149,15 @@ handle_reset:
 2:
     li t0, 0x80
     csrw mstatus, t0
-  
+
     li t0, 0x3
     csrw 0x804, t0
-  
+
     la t0, _start
     ori t0, t0, 3
     csrw mtvec, t0
 
-    #if defined(__PIO_CPP_SUPPORT__)
-    /* register fini (destructor array) call at exit if wanted (bloats up RAM+Flash) */
-    #if defined(__PIO_CPP_CALL_FINI__)
-    la a0,__libc_fini_array
-    call atexit
-    #endif
-    /* call into C++ constructors now */
-    call __libc_init_array
-    #endif
-
-    jal   SystemInit
+    jal SystemInit
     la t0, main
     csrw mepc, t0
     mret

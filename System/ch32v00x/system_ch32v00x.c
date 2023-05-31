@@ -437,7 +437,3 @@ static void SetSysClockTo_48MHz_HSE(void)
     }
 }
 #endif
-
-
-
-    
