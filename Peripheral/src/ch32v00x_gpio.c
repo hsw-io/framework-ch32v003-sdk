@@ -20,28 +20,28 @@
 #define DBGAFR_NUMBITS_MASK       ((uint32_t)0x00100000)
 
 /*********************************************************************
- * @fn      GPIO_DeInit
+ * @fn      gpio_deinit
  *
- * @brief   Deinitializes the GPIOx peripheral registers to their default
+ * @brief   Deinitializes the port peripheral registers to their default
  *        reset values.
  *
- * @param   GPIOx - where x can be (A..G) to select the GPIO peripheral.
+ * @param   port: where x can be (A..G) to select the GPIO peripheral.
  *
  * @return  none
  */
-void GPIO_DeInit(GPIO_TypeDef *GPIOx)
+void gpio_deinit(GPIOPort *port)
 {
-    if(GPIOx == GPIOA)
+    if(port == GPIOA)
     {
         RCC_APB2PeriphResetCmd(RCC_APB2Periph_GPIOA, ENABLE);
         RCC_APB2PeriphResetCmd(RCC_APB2Periph_GPIOA, DISABLE);
     }
-    else if(GPIOx == GPIOC)
+    else if(port == GPIOC)
     {
         RCC_APB2PeriphResetCmd(RCC_APB2Periph_GPIOC, ENABLE);
         RCC_APB2PeriphResetCmd(RCC_APB2Periph_GPIOC, DISABLE);
     }
-    else if(GPIOx == GPIOD)
+    else if(port == GPIOD)
     {
         RCC_APB2PeriphResetCmd(RCC_APB2Periph_GPIOD, ENABLE);
         RCC_APB2PeriphResetCmd(RCC_APB2Periph_GPIOD, DISABLE);
@@ -49,49 +49,49 @@ void GPIO_DeInit(GPIO_TypeDef *GPIOx)
 }
 
 /*********************************************************************
- * @fn      GPIO_AFIODeInit
+ * @fn      gpio_afio_deinit
  *
  * @brief   Deinitializes the Alternate Functions (remap, event control
  *        and EXTI configuration) registers to their default reset values.
  *
  * @return  none
  */
-void GPIO_AFIODeInit(void)
+void gpio_afio_deinit(void)
 {
     RCC_APB2PeriphResetCmd(RCC_APB2Periph_AFIO, ENABLE);
     RCC_APB2PeriphResetCmd(RCC_APB2Periph_AFIO, DISABLE);
 }
 
 /*********************************************************************
- * @fn      GPIO_Init
+ * @fn      gpio_init
  *
- * @brief   GPIOx - where x can be (A..G) to select the GPIO peripheral.
+ * @brief   configure GPIO pin
  *
- * @param   GPIO_InitStruct - pointer to a GPIO_InitTypeDef structure that
+ * @param   gpio  GPIOInit structure that
  *        contains the configuration information for the specified GPIO peripheral.
  *
  * @return  none
  */
-void GPIO_Init(GPIO_TypeDef *GPIOx, GPIO_InitTypeDef *GPIO_InitStruct)
+void gpio_init(GPIOInit gpio)
 {
     uint32_t currentmode = 0x00, currentpin = 0x00, pinpos = 0x00, pos = 0x00;
     uint32_t tmpreg = 0x00, pinmask = 0x00;
 
-    currentmode = ((uint32_t)GPIO_InitStruct->GPIO_Mode) & ((uint32_t)0x0F);
+    currentmode = ((uint32_t)gpio.mode) & ((uint32_t)0x0F);
 
-    if((((uint32_t)GPIO_InitStruct->GPIO_Mode) & ((uint32_t)0x10)) != 0x00)
+    if((((uint32_t)gpio.mode) & ((uint32_t)0x10)) != 0x00)
     {
-        currentmode |= (uint32_t)GPIO_InitStruct->GPIO_Speed;
+        currentmode |= (uint32_t)gpio.speed;
     }
 
-    if(((uint32_t)GPIO_InitStruct->GPIO_Pin & ((uint32_t)0x00FF)) != 0x00)
+    if(((uint32_t)gpio.pin.num & ((uint32_t)0x00FF)) != 0x00)
     {
-        tmpreg = GPIOx->CFGLR;
+        tmpreg = gpio.pin.port->CFGLR;
 
         for(pinpos = 0x00; pinpos < 0x08; pinpos++)
         {
             pos = ((uint32_t)0x01) << pinpos;
-            currentpin = (GPIO_InitStruct->GPIO_Pin) & pos;
+            currentpin = (gpio.pin.num) & pos;
 
             if(currentpin == pos)
             {
@@ -100,30 +100,30 @@ void GPIO_Init(GPIO_TypeDef *GPIOx, GPIO_InitTypeDef *GPIO_InitStruct)
                 tmpreg &= ~pinmask;
                 tmpreg |= (currentmode << pos);
 
-                if(GPIO_InitStruct->GPIO_Mode == GPIO_Mode_IPD)
+                if(gpio.mode == GPIO_MODE_in_pull_down)
                 {
-                    GPIOx->BCR = (((uint32_t)0x01) << pinpos);
+                    gpio.pin.port->BCR = (((uint32_t)0x01) << pinpos);
                 }
                 else
                 {
-                    if(GPIO_InitStruct->GPIO_Mode == GPIO_Mode_IPU)
+                    if(gpio.mode == GPIO_MODE_in_pull_up)
                     {
-                        GPIOx->BSHR = (((uint32_t)0x01) << pinpos);
+                        gpio.pin.port->BSHR = (((uint32_t)0x01) << pinpos);
                     }
                 }
             }
         }
-        GPIOx->CFGLR = tmpreg;
+        gpio.pin.port->CFGLR = tmpreg;
     }
 
-    if(GPIO_InitStruct->GPIO_Pin > 0x00FF)
+    if(gpio.pin.num > 0x00FF)
     {
-        tmpreg = GPIOx->CFGHR;
+        tmpreg = gpio.pin.port->CFGHR;
 
         for(pinpos = 0x00; pinpos < 0x08; pinpos++)
         {
             pos = (((uint32_t)0x01) << (pinpos + 0x08));
-            currentpin = ((GPIO_InitStruct->GPIO_Pin) & pos);
+            currentpin = ((gpio.pin.num) & pos);
 
             if(currentpin == pos)
             {
@@ -132,58 +132,39 @@ void GPIO_Init(GPIO_TypeDef *GPIOx, GPIO_InitTypeDef *GPIO_InitStruct)
                 tmpreg &= ~pinmask;
                 tmpreg |= (currentmode << pos);
 
-                if(GPIO_InitStruct->GPIO_Mode == GPIO_Mode_IPD)
+                if(gpio.mode == GPIO_MODE_in_pull_down)
                 {
-                    GPIOx->BCR = (((uint32_t)0x01) << (pinpos + 0x08));
+                    gpio.pin.port->BCR = (((uint32_t)0x01) << (pinpos + 0x08));
                 }
 
-                if(GPIO_InitStruct->GPIO_Mode == GPIO_Mode_IPU)
+                if(gpio.mode == GPIO_MODE_in_pull_up)
                 {
-                    GPIOx->BSHR = (((uint32_t)0x01) << (pinpos + 0x08));
+                    gpio.pin.port->BSHR = (((uint32_t)0x01) << (pinpos + 0x08));
                 }
             }
         }
-        GPIOx->CFGHR = tmpreg;
+        gpio.pin.port->CFGHR = tmpreg;
     }
 }
 
-/*********************************************************************
- * @fn      GPIO_StructInit
- *
- * @brief   Fills each GPIO_InitStruct member with its default
- *
- * @param   GPIO_InitStruct - pointer to a GPIO_InitTypeDef structure
- *      which will be initialized.
- *
- * @return  none
- */
-void GPIO_StructInit(GPIO_InitTypeDef *GPIO_InitStruct)
-{
-    GPIO_InitStruct->GPIO_Pin = GPIO_Pin_All;
-    GPIO_InitStruct->GPIO_Speed = GPIO_Speed_2MHz;
-    GPIO_InitStruct->GPIO_Mode = GPIO_Mode_IN_FLOATING;
-}
 
 /*********************************************************************
- * @fn      GPIO_ReadInputDataBit
+ * @fn      gpio_read_bit
  *
- * @brief   GPIOx - where x can be (A..G) to select the GPIO peripheral.
+ * @brief   Read bit from specified port
  *
- * @param    GPIO_Pin - specifies the port bit to read.
- *             This parameter can be GPIO_Pin_x where x can be (0..15).
+ * @param   pin: specifies the port and bit to read
  *
  * @return  The input port pin value.
  */
-uint8_t GPIO_ReadInputDataBit(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin)
+uint8_t gpio_read_bit(Pin pin)
 {
     uint8_t bitstatus = 0x00;
 
-    if((GPIOx->INDR & GPIO_Pin) != (uint32_t)Bit_RESET)
-    {
+    if((pin.port->INDR & pin.num) != (uint32_t)Bit_RESET) {
         bitstatus = (uint8_t)Bit_SET;
     }
-    else
-    {
+    else {
         bitstatus = (uint8_t)Bit_RESET;
     }
 
@@ -191,40 +172,36 @@ uint8_t GPIO_ReadInputDataBit(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin)
 }
 
 /*********************************************************************
- * @fn      GPIO_ReadInputData
+ * @fn      gpio_read
  *
  * @brief   Reads the specified GPIO input data port.
  *
- * @param   GPIOx: where x can be (A..G) to select the GPIO peripheral.
+ * @param   port: where x can be (A..G) to select the GPIO peripheral.
  *
  * @return  The input port pin value.
  */
-uint16_t GPIO_ReadInputData(GPIO_TypeDef *GPIOx)
+uint16_t gpio_read(GPIOPort *port)
 {
-    return ((uint16_t)GPIOx->INDR);
+    return ((uint16_t)port->INDR);
 }
 
 /*********************************************************************
- * @fn      GPIO_ReadOutputDataBit
+ * @fn      gpio_read_output_bit
  *
  * @brief   Reads the specified output data port bit.
  *
- * @param   GPIOx - where x can be (A..G) to select the GPIO peripheral.
- *          GPIO_Pin - specifies the port bit to read.
+ * @param   pin specifies the port and bit to read.
  *            This parameter can be GPIO_Pin_x where x can be (0..15).
  *
  * @return  none
  */
-uint8_t GPIO_ReadOutputDataBit(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin)
-{
+uint8_t gpio_read_output_bit(Pin pin) {
     uint8_t bitstatus = 0x00;
 
-    if((GPIOx->OUTDR & GPIO_Pin) != (uint32_t)Bit_RESET)
-    {
+    if((pin.port->OUTDR & pin.num) != (uint32_t)Bit_RESET) {
         bitstatus = (uint8_t)Bit_SET;
     }
-    else
-    {
+    else {
         bitstatus = (uint8_t)Bit_RESET;
     }
 
@@ -232,89 +209,54 @@ uint8_t GPIO_ReadOutputDataBit(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin)
 }
 
 /*********************************************************************
- * @fn      GPIO_ReadOutputData
+ * @fn      gpio_read_output
  *
  * @brief   Reads the specified GPIO output data port.
  *
- * @param   GPIOx - where x can be (A..G) to select the GPIO peripheral.
+ * @param   port - where x can be (A..G) to select the GPIO peripheral.
  *
  * @return  GPIO output port pin value.
  */
-uint16_t GPIO_ReadOutputData(GPIO_TypeDef *GPIOx)
+uint16_t gpio_read_output(GPIOPort *port)
 {
-    return ((uint16_t)GPIOx->OUTDR);
+    return ((uint16_t)port->OUTDR);
 }
 
 /*********************************************************************
- * @fn      GPIO_SetBits
- *
- * @brief   Sets the selected data port bits.
- *
- * @param   GPIOx - where x can be (A..G) to select the GPIO peripheral.
- *          GPIO_Pin - specifies the port bits to be written.
- *            This parameter can be any combination of GPIO_Pin_x where x can be (0..15).
- *
- * @return  none
- */
-void GPIO_SetBits(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin)
-{
-    GPIOx->BSHR = GPIO_Pin;
-}
-
-/*********************************************************************
- * @fn      GPIO_ResetBits
- *
- * @brief   Clears the selected data port bits.
- *
- * @param   GPIOx - where x can be (A..G) to select the GPIO peripheral.
- *          GPIO_Pin - specifies the port bits to be written.
- *            This parameter can be any combination of GPIO_Pin_x where x can be (0..15).
- *
- * @return  none
- */
-void GPIO_ResetBits(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin)
-{
-    GPIOx->BCR = GPIO_Pin;
-}
-
-/*********************************************************************
- * @fn      GPIO_WriteBit
+ * @fn      gpio_write_bit
  *
  * @brief   Sets or clears the selected data port bit.
  *
- * @param   GPIO_Pin - specifies the port bit to be written.
- *            This parameter can be one of GPIO_Pin_x where x can be (0..15).
- *          BitVal - specifies the value to be written to the selected bit.
+ * @param   pin - specifies the port bit to be written.
+ * @param   action - specifies the value to be written to the selected bit.
  *            Bit_SetL - to clear the port pin.
  *            Bit_SetH - to set the port pin.
  *
  * @return  none
  */
-void GPIO_WriteBit(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin, BitAction BitVal)
+void gpio_write_bit(Pin pin, BitAction action)
 {
-    if(BitVal != Bit_RESET)
-    {
-        GPIOx->BSHR = GPIO_Pin;
+    if(action != Bit_RESET) {
+        pin.port->BSHR = pin.num;
     }
-    else
-    {
-        GPIOx->BCR = GPIO_Pin;
+    else {
+        pin.port->BCR = pin.num;
     }
 }
 
 /*********************************************************************
- * @fn      GPIO_Write
+ * @fn      gpio_write
  *
  * @brief   Writes data to the specified GPIO data port.
  *
- * @param   GPIOx - where x can be (A..G) to select the GPIO peripheral.
- *          PortVal - specifies the value to be written to the port output data register.
+ * @param   port: where x can be (A..G) to select the GPIO peripheral.
+ * @param   value: specifies the value to be written to the port output data register.
  *
  * @return  none
  */
-void GPIO_Write(GPIO_TypeDef *GPIOx, uint16_t PortVal)
+void gpio_write(GPIOPort *port, uint16_t value)
 {
-    GPIOx->OUTDR = PortVal;
+    port->OUTDR = value;
 }
 
 /*********************************************************************
@@ -322,22 +264,22 @@ void GPIO_Write(GPIO_TypeDef *GPIOx, uint16_t PortVal)
  *
  * @brief   Locks GPIO Pins configuration registers.
  *
- * @param   GPIOx - where x can be (A..G) to select the GPIO peripheral.
- *          GPIO_Pin - specifies the port bit to be written.
+ * @param   port - where x can be (A..G) to select the GPIO peripheral.
+ *          pin - specifies the port bit to be written.
  *            This parameter can be any combination of GPIO_Pin_x where x can be (0..15).
  *
  * @return  none
  */
-void GPIO_PinLockConfig(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin)
+void GPIO_PinLockConfig(GPIOPort *port, uint16_t pin)
 {
     uint32_t tmp = 0x00010000;
 
-    tmp |= GPIO_Pin;
-    GPIOx->LCKR = tmp;
-    GPIOx->LCKR = GPIO_Pin;
-    GPIOx->LCKR = tmp;
-    tmp = GPIOx->LCKR;
-    tmp = GPIOx->LCKR;
+    tmp |= pin;
+    port->LCKR = tmp;
+    port->LCKR = pin;
+    port->LCKR = tmp;
+    tmp = port->LCKR;
+    tmp = port->LCKR;
 }
 
 /*********************************************************************
@@ -363,7 +305,7 @@ void GPIO_PinLockConfig(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin)
  *            GPIO_Remap_ADC1_ETRGREG - ADC1 External Trigger Regular Conversion remapping
  *            GPIO_Remap_LSI_CAL - LSI calibration Alternate Function mapping
  *            GPIO_Remap_SDI_Disable - SDI Disabled
- *          NewState - ENABLE or DISABLE.
+ * @param   NewState - ENABLE or DISABLE.
  *
  * @return  none
  */
@@ -452,7 +394,3 @@ void GPIO_EXTILineConfig(uint8_t GPIO_PortSource, uint8_t GPIO_PinSource)
     AFIO->EXTICR &= ~tmp;
     AFIO->EXTICR |= ((uint32_t)(GPIO_PortSource<<(GPIO_PinSource<<1)));
 }
-
-
-
-

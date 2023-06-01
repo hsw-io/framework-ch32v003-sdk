@@ -10,57 +10,60 @@
 * microcontroller manufactured by Nanjing Qinheng Microelectronics.
 *******************************************************************************/
 #include <ch32v00x.h>
+#include <stddef.h>
 
-/* 
-* Uncomment the line corresponding to the desired System clock (SYSCLK) frequency (after 
-* reset the HSI is used as SYSCLK source).
-* If none of the define below is enabled, the HSI is used as System clock source. 
-*/
 
-//#define SYSCLK_FREQ_8MHz_HSI    8000000
-//#define SYSCLK_FREQ_24MHZ_HSI   HSI_VALUE
-//#define SYSCLK_FREQ_48MHZ_HSI   48000000
-//#define SYSCLK_FREQ_8MHz_HSE    8000000
-//#define SYSCLK_FREQ_24MHz_HSE   HSE_VALUE
-#define SYSCLK_FREQ_48MHz_HSE   48000000
+uint32_t SystemCoreClock = HSI_VALUE;
+void (*nmi_handler_func)(void) = &default_nmi_handler;
+void (*hard_fault_handler_func)(void) = &default_hard_fault_handler;
 
-/* Clock Definitions */
-#ifdef SYSCLK_FREQ_8MHz_HSI
-  uint32_t SystemCoreClock         = SYSCLK_FREQ_8MHz_HSI;          /* System Clock Frequency (Core Clock) */
-#elif defined SYSCLK_FREQ_24MHZ_HSI
-  uint32_t SystemCoreClock         = SYSCLK_FREQ_24MHZ_HSI;        /* System Clock Frequency (Core Clock) */
-#elif defined SYSCLK_FREQ_48MHZ_HSI
-  uint32_t SystemCoreClock         = SYSCLK_FREQ_48MHZ_HSI;        /* System Clock Frequency (Core Clock) */
-#elif defined SYSCLK_FREQ_8MHz_HSE
-  uint32_t SystemCoreClock         = SYSCLK_FREQ_8MHz_HSE;         /* System Clock Frequency (Core Clock) */
-#elif defined SYSCLK_FREQ_24MHz_HSE
-  uint32_t SystemCoreClock         = SYSCLK_FREQ_24MHz_HSE;        /* System Clock Frequency (Core Clock) */
-#elif defined SYSCLK_FREQ_48MHz_HSE
-  uint32_t SystemCoreClock         = SYSCLK_FREQ_48MHz_HSE;        /* System Clock Frequency (Core Clock) */
-#else
-  uint32_t SystemCoreClock         = HSI_VALUE;
-#endif
+enum SYSCLK {
+    SYSCLK_48MHz_HSI,
+    SYSCLK_24MHz_HSI,
+    SYSCLK_8MHz_HSI,
+    SYSCLK_48MHz_HSE,
+    SYSCLK_24MHz_HSE,
+    SYSCLK_8MHz_HSE,
+};
 
-__I uint8_t AHBPrescTable[16] = {1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8};
-
+typedef struct {
+    enum SYSCLK sysclk;
+    void (*custom_nmi_handler_func)(void);
+    void (*custom_hard_fault_handler_func)(void);
+} SystemSetup;
 
 /* system_private_function_proto_types */
-static void SetSysClock(void);
+static void SetSysClock(enum SYSCLK);
 
-#ifdef SYSCLK_FREQ_8MHz_HSI
-  static void SetSysClockTo_8MHz_HSI(void);
-#elif defined SYSCLK_FREQ_24MHZ_HSI
-  static void SetSysClockTo_24MHZ_HSI(void);
-#elif defined SYSCLK_FREQ_48MHZ_HSI
-  static void SetSysClockTo_48MHZ_HSI(void);
-#elif defined SYSCLK_FREQ_8MHz_HSE
-  static void SetSysClockTo_8MHz_HSE(void);
-#elif defined SYSCLK_FREQ_24MHz_HSE
-  static void SetSysClockTo_24MHz_HSE(void);
-#elif defined SYSCLK_FREQ_48MHz_HSE
-  static void SetSysClockTo_48MHz_HSE(void);
-#endif
 
+void system_setup(SystemSetup systemSetup) {
+    SetSysClock(systemSetup.sysclk);
+    // override nmi and hard_fault handlers
+    if (systemSetup.custom_nmi_handler_func != NULL) {
+        nmi_handler_func = systemSetup.custom_hard_fault_handler_func;
+    }
+    if (systemSetup.custom_hard_fault_handler_func != NULL) {
+        hard_fault_handler_func = systemSetup.custom_hard_fault_handler_func;
+    }
+    
+}
+
+void default_nmi_handler(void) {
+}
+void NMI_Handler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
+void NMI_Handler(void) {
+    (*nmi_handler_func)();
+}
+
+void default_hard_fault_handler(void) {
+    while(1) {
+    }
+}
+void HardFault_Handler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
+void HardFault_Handler(void)
+{
+    (*hard_fault_handler_func)();
+}
 
 /*********************************************************************
  * @fn      SystemInit
@@ -79,59 +82,8 @@ void SystemInit (void)
   RCC->CFGR0 &= (uint32_t)0xFFFEFFFF;
   RCC->INTR = 0x009F0000;
 
-  SetSysClock();
+//   SetSysClock();
 }
-
-
-/*********************************************************************
- * @fn      SystemCoreClockUpdate
- *
- * @brief   Update SystemCoreClock variable according to Clock Register Values.
- *
- * @return  none
- */
-void SystemCoreClockUpdate (void)
-{
-    uint32_t tmp = 0, pllsource = 0;
-
-    tmp = RCC->CFGR0 & RCC_SWS;
-
-    switch (tmp)
-    {
-        case 0x00:
-            SystemCoreClock = HSI_VALUE;
-            break;
-        case 0x04:
-            SystemCoreClock = HSE_VALUE;
-            break;
-        case 0x08:
-            pllsource = RCC->CFGR0 & RCC_PLLSRC;
-            if (pllsource == 0x00)
-            {
-                SystemCoreClock = HSI_VALUE * 2;
-            }
-            else
-            {
-                SystemCoreClock = HSE_VALUE * 2;
-            }
-            break;
-        default:
-            SystemCoreClock = HSI_VALUE;
-            break;
-    }
-
-    tmp = AHBPrescTable[((RCC->CFGR0 & RCC_HPRE) >> 4)];
-
-    if(((RCC->CFGR0 & RCC_HPRE) >> 4) < 8)
-    {
-        SystemCoreClock /= tmp;
-    }
-    else
-    {
-        SystemCoreClock >>= tmp;
-    }
-}
-
 
 /*********************************************************************
  * @fn      SetSysClock
@@ -140,29 +92,41 @@ void SystemCoreClockUpdate (void)
  *
  * @return  none
  */
-static void SetSysClock(void)
+static void SetSysClock(enum SYSCLK sysclk)
 {
-#ifdef SYSCLK_FREQ_8MHz_HSI
-    SetSysClockTo_8MHz_HSI();
-#elif defined SYSCLK_FREQ_24MHZ_HSI
-    SetSysClockTo_24MHZ_HSI();
-#elif defined SYSCLK_FREQ_48MHZ_HSI
-    SetSysClockTo_48MHZ_HSI();
-#elif defined SYSCLK_FREQ_8MHz_HSE
-    SetSysClockTo_8MHz_HSE();
-#elif defined SYSCLK_FREQ_24MHz_HSE
-    SetSysClockTo_24MHz_HSE();
-#elif defined SYSCLK_FREQ_48MHz_HSE
-    SetSysClockTo_48MHz_HSE();
-#endif
+
+    switch (sysclk)
+    {
+    case SYSCLK_8MHz_HSI:
+        SetSysClockTo_8MHz_HSI();
+        SystemCoreClock = 8000000;
+        break;
+    case SYSCLK_24MHz_HSI:
+        SetSysClockTo_24MHz_HSI();
+        SystemCoreClock = 24000000;
+        break;
+    case SYSCLK_48MHz_HSI:
+        SetSysClockTo_48MHz_HSI();
+        SystemCoreClock = 48000000;
+        break;
+    case SYSCLK_8MHz_HSE:
+        SetSysClockTo_8MHz_HSE();
+        SystemCoreClock = 8000000;
+        break;
+    case SYSCLK_24MHz_HSE:
+        SetSysClockTo_24MHz_HSE();
+        SystemCoreClock = 24000000;
+        break;
+    case SYSCLK_48MHz_HSE:
+        SetSysClockTo_48MHz_HSE();
+        SystemCoreClock = 48000000;
+        break;
+    }
  
  /* If none of the define above is enabled, the HSI is used as System clock.
   * source (default after reset) 
 	*/ 
 }
-
-
-#ifdef SYSCLK_FREQ_8MHz_HSI
 
 /*********************************************************************
  * @fn      SetSysClockTo_8MHz_HSI
@@ -181,7 +145,6 @@ static void SetSysClockTo_8MHz_HSI(void)
     RCC->CFGR0 |= (uint32_t)RCC_HPRE_DIV3;
 }
 
-#elif defined SYSCLK_FREQ_24MHZ_HSI
 
 /*********************************************************************
  * @fn      SetSysClockTo_24MHZ_HSI
@@ -200,8 +163,6 @@ static void SetSysClockTo_24MHZ_HSI(void)
     RCC->CFGR0 |= (uint32_t)RCC_HPRE_DIV1;
 }
 
-
-#elif defined SYSCLK_FREQ_48MHZ_HSI
 
 /*********************************************************************
  * @fn      SetSysClockTo_48MHZ_HSI
@@ -238,7 +199,6 @@ static void SetSysClockTo_48MHZ_HSI(void)
     }
 }
 
-#elif defined SYSCLK_FREQ_8MHz_HSE
 
 /*********************************************************************
  * @fn      SetSysClockTo_8MHz_HSE
@@ -302,7 +262,6 @@ static void SetSysClockTo_8MHz_HSE(void)
     }
 }
 
-#elif defined SYSCLK_FREQ_24MHz_HSE
 
 /*********************************************************************
  * @fn      SetSysClockTo_24MHz_HSE
@@ -366,7 +325,6 @@ static void SetSysClockTo_24MHz_HSE(void)
     }
 }
 
-#elif defined SYSCLK_FREQ_48MHz_HSE
 
 /*********************************************************************
  * @fn      SetSysClockTo_48MHz_HSE
@@ -436,4 +394,3 @@ static void SetSysClockTo_48MHz_HSE(void)
          */
     }
 }
-#endif

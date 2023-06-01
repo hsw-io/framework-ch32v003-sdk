@@ -25,33 +25,42 @@ typedef enum
     GPIO_Speed_10MHz = 1,
     GPIO_Speed_2MHz,
     GPIO_Speed_50MHz
-} GPIOSpeed_TypeDef;
+} GPIOSpeed;
 
-/* Configuration Mode enumeration */
+
+/* GPIO configuration mode enumeration */
 typedef enum
 {
-    GPIO_Mode_AIN = 0x0,
-    GPIO_Mode_IN_FLOATING = 0x04,
-    GPIO_Mode_IPD = 0x28,
-    GPIO_Mode_IPU = 0x48,
-    GPIO_Mode_Out_OD = 0x14,
-    GPIO_Mode_Out_PP = 0x10,
-    GPIO_Mode_AF_OD = 0x1C,
-    GPIO_Mode_AF_PP = 0x18
-} GPIOMode_TypeDef;
+    GPIO_MODE_analog_in = 0x0,
+    GPIO_MODE_in_floating = 0x04,
+    GPIO_MODE_in_pull_down = 0x28,
+    GPIO_MODE_in_pull_up = 0x48,
+    GPIO_MODE_out_open_drain = 0x14,
+    GPIO_MODE_out_push_pull = 0x10,
+    GPIO_MODE_alt_func_open_drain_OD = 0x1C,
+    GPIO_MODE_alt_func_push_pull = 0x18
+} GPIO_MODE;
+
+
+// GPIO Pin structure definition
+typedef struct {
+    GPIOPort* port;
+    uint16_t num;
+} Pin;
+
 
 /* GPIO Init structure definition */
 typedef struct
 {
-    uint16_t GPIO_Pin; /* Specifies the GPIO pins to be configured.
-                          This parameter can be any value of @ref GPIO_pins_define */
+    Pin pin; /* Specifies the GPIO pins to be configured.
+            This parameter can be any value of @ref GPIO_pins_define */
 
-    GPIOSpeed_TypeDef GPIO_Speed; /* Specifies the speed for the selected pins.
-                                     This parameter can be a value of @ref GPIOSpeed_TypeDef */
+    GPIOSpeed speed; /* Specifies the speed for the selected pins.
+            This parameter can be a value of @ref GPIOSpeed */
 
-    GPIOMode_TypeDef GPIO_Mode; /* Specifies the operating mode for the selected pins.
-                                   This parameter can be a value of @ref GPIOMode_TypeDef */
-} GPIO_InitTypeDef;
+    GPIO_MODE mode; /* Specifies the operating mode for the selected pins.
+            This parameter can be a value of @ref GPIO_MODE */
+} GPIOInit;
 
 /* Bit_SET and Bit_RESET enumeration */
 typedef enum
@@ -105,19 +114,16 @@ typedef enum
 #define GPIO_PinSource6                ((uint8_t)0x06)
 #define GPIO_PinSource7                ((uint8_t)0x07)
 
-void     GPIO_DeInit(GPIO_TypeDef *GPIOx);
-void     GPIO_AFIODeInit(void);
-void     GPIO_Init(GPIO_TypeDef *GPIOx, GPIO_InitTypeDef *GPIO_InitStruct);
-void     GPIO_StructInit(GPIO_InitTypeDef *GPIO_InitStruct);
-uint8_t  GPIO_ReadInputDataBit(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin);
-uint16_t GPIO_ReadInputData(GPIO_TypeDef *GPIOx);
-uint8_t  GPIO_ReadOutputDataBit(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin);
-uint16_t GPIO_ReadOutputData(GPIO_TypeDef *GPIOx);
-void     GPIO_SetBits(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin);
-void     GPIO_ResetBits(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin);
-void     GPIO_WriteBit(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin, BitAction BitVal);
-void     GPIO_Write(GPIO_TypeDef *GPIOx, uint16_t PortVal);
-void     GPIO_PinLockConfig(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin);
+void     gpio_deinit(GPIOPort *GPIOx);
+void     gpio_afio_deinit(void);
+void     gpio_init(GPIOInit gpio_init);
+uint8_t  gpio_read_bit(Pin pin);
+uint16_t gpio_read(GPIOPort *GPIOx);
+uint8_t  gpio_read_output_bit(Pin pin);
+uint16_t gpio_read_output(GPIOPort *GPIOx);
+void     gpio_write_bit(Pin pin, BitAction action);
+void     gpio_write(GPIOPort *GPIOx, uint16_t PortVal);
+void     GPIO_PinLockConfig(GPIOPort *GPIOx, uint16_t pin);
 void     GPIO_EventOutputConfig(uint8_t GPIO_PortSource, uint8_t GPIO_PinSource);
 void     GPIO_EventOutputCmd(FunctionalState NewState);
 void     GPIO_PinRemapConfig(uint32_t GPIO_Remap, FunctionalState NewState);

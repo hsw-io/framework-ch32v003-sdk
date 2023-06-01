@@ -170,7 +170,7 @@ typedef struct
     __IO uint32_t BSHR;
     __IO uint32_t BCR;
     __IO uint32_t LCKR;
-} GPIO_TypeDef;
+} GPIOPort;
 
 /* Alternate Function I/O */
 typedef struct
@@ -379,9 +379,9 @@ typedef struct
 #define PWR                                     ((PWR_TypeDef *)PWR_BASE)
 #define AFIO                                    ((AFIO_TypeDef *)AFIO_BASE)
 #define EXTI                                    ((EXTI_TypeDef *)EXTI_BASE)
-#define GPIOA                                   ((GPIO_TypeDef *)GPIOA_BASE)
-#define GPIOC                                   ((GPIO_TypeDef *)GPIOC_BASE)
-#define GPIOD                                   ((GPIO_TypeDef *)GPIOD_BASE)
+#define GPIOA                                   ((GPIOPort *)GPIOA_BASE)
+#define GPIOC                                   ((GPIOPort *)GPIOC_BASE)
+#define GPIOD                                   ((GPIOPort *)GPIOD_BASE)
 #define ADC1                                    ((ADC_TypeDef *)ADC1_BASE)
 #define TIM1                                    ((TIM_TypeDef *)TIM1_BASE)
 #define SPI1                                    ((SPI_TypeDef *)SPI1_BASE)
