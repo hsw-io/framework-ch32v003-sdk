@@ -48,6 +48,32 @@ typedef struct {
     uint16_t num;
 } Pin;
 
+#define PIN_PA_0 (Pin){.port = GPIOA, .num = GPIO_Pin_0}
+#define PIN_PA_1 (Pin){.port = GPIOA, .num = GPIO_Pin_1}
+#define PIN_PA_2 (Pin){.port = GPIOA, .num = GPIO_Pin_2}
+#define PIN_PA_3 (Pin){.port = GPIOA, .num = GPIO_Pin_3}
+#define PIN_PA_4 (Pin){.port = GPIOA, .num = GPIO_Pin_4}
+#define PIN_PA_5 (Pin){.port = GPIOA, .num = GPIO_Pin_5}
+#define PIN_PA_6 (Pin){.port = GPIOA, .num = GPIO_Pin_6}
+#define PIN_PA_7 (Pin){.port = GPIOA, .num = GPIO_Pin_7}
+
+#define PIN_PC_0 (Pin){.port = GPIOC, .num = GPIO_Pin_0}
+#define PIN_PC_1 (Pin){.port = GPIOC, .num = GPIO_Pin_1}
+#define PIN_PC_2 (Pin){.port = GPIOC, .num = GPIO_Pin_2}
+#define PIN_PC_3 (Pin){.port = GPIOC, .num = GPIO_Pin_3}
+#define PIN_PC_4 (Pin){.port = GPIOC, .num = GPIO_Pin_4}
+#define PIN_PC_5 (Pin){.port = GPIOC, .num = GPIO_Pin_5}
+#define PIN_PC_6 (Pin){.port = GPIOC, .num = GPIO_Pin_6}
+#define PIN_PC_7 (Pin){.port = GPIOC, .num = GPIO_Pin_7}
+
+#define PIN_PD_0 (Pin){.port = GPIOD, .num = GPIO_Pin_0}
+#define PIN_PD_1 (Pin){.port = GPIOD, .num = GPIO_Pin_1}
+#define PIN_PD_2 (Pin){.port = GPIOD, .num = GPIO_Pin_2}
+#define PIN_PD_3 (Pin){.port = GPIOD, .num = GPIO_Pin_3}
+#define PIN_PD_4 (Pin){.port = GPIOD, .num = GPIO_Pin_4}
+#define PIN_PD_5 (Pin){.port = GPIOD, .num = GPIO_Pin_5}
+#define PIN_PD_6 (Pin){.port = GPIOD, .num = GPIO_Pin_6}
+#define PIN_PD_7 (Pin){.port = GPIOD, .num = GPIO_Pin_7}
 
 /* GPIO Init structure definition */
 typedef struct

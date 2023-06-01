@@ -10,60 +10,32 @@
 * microcontroller manufactured by Nanjing Qinheng Microelectronics.
 *******************************************************************************/
 #include <ch32v00x.h>
+#include "system_ch32v00x.h"
 #include <stddef.h>
 
 
 uint32_t SystemCoreClock = HSI_VALUE;
-void (*nmi_handler_func)(void) = &default_nmi_handler;
-void (*hard_fault_handler_func)(void) = &default_hard_fault_handler;
 
-enum SYSCLK {
-    SYSCLK_48MHz_HSI,
-    SYSCLK_24MHz_HSI,
-    SYSCLK_8MHz_HSI,
-    SYSCLK_48MHz_HSE,
-    SYSCLK_24MHz_HSE,
-    SYSCLK_8MHz_HSE,
-};
-
-typedef struct {
-    enum SYSCLK sysclk;
-    void (*custom_nmi_handler_func)(void);
-    void (*custom_hard_fault_handler_func)(void);
-} SystemSetup;
-
-/* system_private_function_proto_types */
-static void SetSysClock(enum SYSCLK);
-
-
-void system_setup(SystemSetup systemSetup) {
-    SetSysClock(systemSetup.sysclk);
-    // override nmi and hard_fault handlers
-    if (systemSetup.custom_nmi_handler_func != NULL) {
-        nmi_handler_func = systemSetup.custom_hard_fault_handler_func;
-    }
-    if (systemSetup.custom_hard_fault_handler_func != NULL) {
-        hard_fault_handler_func = systemSetup.custom_hard_fault_handler_func;
-    }
-    
-}
 
 void default_nmi_handler(void) {
 }
+void (*nmi_handler_func)(void) = &default_nmi_handler;
 void NMI_Handler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
 void NMI_Handler(void) {
     (*nmi_handler_func)();
 }
 
+
 void default_hard_fault_handler(void) {
     while(1) {
     }
 }
+void (*hard_fault_handler_func)(void) = &default_hard_fault_handler;
 void HardFault_Handler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
-void HardFault_Handler(void)
-{
+void HardFault_Handler(void) {
     (*hard_fault_handler_func)();
 }
+
 
 /*********************************************************************
  * @fn      SystemInit
@@ -81,52 +53,9 @@ void SystemInit (void)
   RCC->CTLR &= (uint32_t)0xFFFBFFFF;
   RCC->CFGR0 &= (uint32_t)0xFFFEFFFF;
   RCC->INTR = 0x009F0000;
-
-//   SetSysClock();
+//   set_sys_clock();
 }
 
-/*********************************************************************
- * @fn      SetSysClock
- *
- * @brief   Configures the System clock frequency, HCLK, PCLK2 and PCLK1 prescalers.
- *
- * @return  none
- */
-static void SetSysClock(enum SYSCLK sysclk)
-{
-
-    switch (sysclk)
-    {
-    case SYSCLK_8MHz_HSI:
-        SetSysClockTo_8MHz_HSI();
-        SystemCoreClock = 8000000;
-        break;
-    case SYSCLK_24MHz_HSI:
-        SetSysClockTo_24MHz_HSI();
-        SystemCoreClock = 24000000;
-        break;
-    case SYSCLK_48MHz_HSI:
-        SetSysClockTo_48MHz_HSI();
-        SystemCoreClock = 48000000;
-        break;
-    case SYSCLK_8MHz_HSE:
-        SetSysClockTo_8MHz_HSE();
-        SystemCoreClock = 8000000;
-        break;
-    case SYSCLK_24MHz_HSE:
-        SetSysClockTo_24MHz_HSE();
-        SystemCoreClock = 24000000;
-        break;
-    case SYSCLK_48MHz_HSE:
-        SetSysClockTo_48MHz_HSE();
-        SystemCoreClock = 48000000;
-        break;
-    }
- 
- /* If none of the define above is enabled, the HSI is used as System clock.
-  * source (default after reset) 
-	*/ 
-}
 
 /*********************************************************************
  * @fn      SetSysClockTo_8MHz_HSI
@@ -135,8 +64,7 @@ static void SetSysClock(enum SYSCLK sysclk)
  *
  * @return  none
  */
-static void SetSysClockTo_8MHz_HSI(void)
-{
+void SetSysClockTo_8MHz_HSI(void) {
     /* Flash 0 wait state */
     FLASH->ACTLR &= (uint32_t)((uint32_t)~FLASH_ACTLR_LATENCY);
     FLASH->ACTLR |= (uint32_t)FLASH_ACTLR_LATENCY_0;
@@ -147,14 +75,13 @@ static void SetSysClockTo_8MHz_HSI(void)
 
 
 /*********************************************************************
- * @fn      SetSysClockTo_24MHZ_HSI
+ * @fn      SetSysClockTo_24MHz_HSI
  *
  * @brief   Sets System clock frequency to 24MHz and configure HCLK, PCLK2 and PCLK1 prescalers.
  *
  * @return  none
  */
-static void SetSysClockTo_24MHZ_HSI(void)
-{
+void SetSysClockTo_24MHz_HSI(void) {
     /* Flash 0 wait state */
     FLASH->ACTLR &= (uint32_t)((uint32_t)~FLASH_ACTLR_LATENCY);
     FLASH->ACTLR |= (uint32_t)FLASH_ACTLR_LATENCY_0;
@@ -165,14 +92,13 @@ static void SetSysClockTo_24MHZ_HSI(void)
 
 
 /*********************************************************************
- * @fn      SetSysClockTo_48MHZ_HSI
+ * @fn      SetSysClockTo_48MHz_HSI
  *
  * @brief   Sets System clock frequency to 48MHz and configure HCLK, PCLK2 and PCLK1 prescalers.
  *
  * @return  none
  */
-static void SetSysClockTo_48MHZ_HSI(void)
-{
+void SetSysClockTo_48MHz_HSI(void) {
     /* Flash 0 wait state */
     FLASH->ACTLR &= (uint32_t)((uint32_t)~FLASH_ACTLR_LATENCY);
     FLASH->ACTLR |= (uint32_t)FLASH_ACTLR_LATENCY_1;
@@ -203,12 +129,11 @@ static void SetSysClockTo_48MHZ_HSI(void)
 /*********************************************************************
  * @fn      SetSysClockTo_8MHz_HSE
  *
- * @brief   Sets System clock frequency to 56MHz and configure HCLK, PCLK2 and PCLK1 prescalers.
+ * @brief   Sets System clock frequency to 8MHz and configure HCLK, PCLK2 and PCLK1 prescalers.
  *
  * @return  none
  */
-static void SetSysClockTo_8MHz_HSE(void)
-{
+void SetSysClockTo_8MHz_HSE(void) {
     __IO uint32_t StartUpCounter = 0, HSEStatus = 0;
 
     /* Close PA0-PA1 GPIO function */
@@ -270,7 +195,7 @@ static void SetSysClockTo_8MHz_HSE(void)
  *
  * @return  none
  */
-static void SetSysClockTo_24MHz_HSE(void)
+void SetSysClockTo_24MHz_HSE(void)
 {
     __IO uint32_t StartUpCounter = 0, HSEStatus = 0;
 
@@ -333,7 +258,7 @@ static void SetSysClockTo_24MHz_HSE(void)
  *
  * @return  none
  */
-static void SetSysClockTo_48MHz_HSE(void)
+void SetSysClockTo_48MHz_HSE(void)
 {
     __IO uint32_t StartUpCounter = 0, HSEStatus = 0;
 
@@ -392,5 +317,57 @@ static void SetSysClockTo_48MHz_HSE(void)
          * If HSE fails to start-up, the application will have wrong clock
      * configuration. User can add here some code to deal with this error
          */
+    }
+}
+
+
+/*********************************************************************
+ * @fn      set_sys_clock
+ *
+ * @brief   Configures the System clock frequency, HCLK, PCLK2 and PCLK1 prescalers.
+ *
+ * @param   sysclk: sets frequency and oscillator type (HSI - internal, HSE - external)
+ *
+ * @return  none
+ */
+void set_sys_clock(enum SYSCLK sysclk) {
+    switch (sysclk) {
+    case SYSCLK_8MHz_HSI:
+        SetSysClockTo_8MHz_HSI();
+        SystemCoreClock = 8000000;
+        break;
+    case SYSCLK_24MHz_HSI:
+        SetSysClockTo_24MHz_HSI();
+        SystemCoreClock = 24000000;
+        break;
+    case SYSCLK_48MHz_HSI:
+        SetSysClockTo_48MHz_HSI();
+        SystemCoreClock = 48000000;
+        break;
+    case SYSCLK_8MHz_HSE:
+        SetSysClockTo_8MHz_HSE();
+        SystemCoreClock = 8000000;
+        break;
+    case SYSCLK_24MHz_HSE:
+        SetSysClockTo_24MHz_HSE();
+        SystemCoreClock = 24000000;
+        break;
+    case SYSCLK_48MHz_HSE:
+        SetSysClockTo_48MHz_HSE();
+        SystemCoreClock = 48000000;
+        break;
+    }
+    // If none of the define above is enabled, the HSI is used as System clock.
+    // source (default after reset)
+}
+
+void system_setup(SystemSetup systemSetup) {
+    set_sys_clock(systemSetup.sysclk);
+    // override nmi and hard_fault handlers
+    if (systemSetup.custom_nmi_handler_func != NULL) {
+        nmi_handler_func = systemSetup.custom_hard_fault_handler_func;
+    }
+    if (systemSetup.custom_hard_fault_handler_func != NULL) {
+        hard_fault_handler_func = systemSetup.custom_hard_fault_handler_func;
     }
 }
