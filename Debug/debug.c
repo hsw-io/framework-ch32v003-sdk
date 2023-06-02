@@ -12,24 +12,9 @@
  *******************************************************************************/
 #include <debug.h>
 
-static uint8_t  p_us = 0;
-static uint16_t p_ms = 0;
 
 /*********************************************************************
- * @fn      Delay_Init
- *
- * @brief   Initializes Delay Funcation.
- *
- * @return  none
- */
-void Delay_Init(void)
-{
-    p_us = SystemCoreClock / 8000000;
-    p_ms = (uint16_t)p_us * 1000;
-}
-
-/*********************************************************************
- * @fn      Delay_Us
+ * @fn      delay_us
  *
  * @brief   Microsecond Delay Time.
  *
@@ -37,8 +22,9 @@ void Delay_Init(void)
  *
  * @return  None
  */
-void Delay_Us(uint32_t n)
+void delay_us(uint32_t n)
 {
+    uint8_t p_us = SystemCoreClock / 8000000;
     uint32_t i;
 
     SysTick->SR &= ~(1 << 0);
@@ -52,8 +38,9 @@ void Delay_Us(uint32_t n)
     SysTick->CTLR &= ~(1 << 0);
 }
 
+
 /*********************************************************************
- * @fn      Delay_Ms
+ * @fn      delay_ms
  *
  * @brief   Millisecond Delay Time.
  *
@@ -61,8 +48,9 @@ void Delay_Us(uint32_t n)
  *
  * @return  None
  */
-void Delay_Ms(uint32_t n)
+void delay_ms(uint32_t n)
 {
+    uint16_t p_ms = SystemCoreClock / 8000;
     uint32_t i;
 
     SysTick->SR &= ~(1 << 0);
@@ -93,7 +81,7 @@ void USART_Printf_Init(uint32_t baudrate)
 
     gpio_init((GPIOInit) {
         .pin = PIN_PD_5,
-        .speed = GPIO_Speed_50MHz,
+        .speed = GPIO_SPEED_50MHz,
         .mode = GPIO_MODE_alt_func_push_pull,
     });
 
@@ -118,7 +106,7 @@ void USART_Printf_Init(uint32_t baudrate)
  *
  * @return  size - Data length
  */
-__attribute__((used)) 
+__attribute__((used))
 int _write(int fd, char *buf, int size)
 {
     int i;

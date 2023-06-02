@@ -62,6 +62,24 @@ void gpio_afio_deinit(void)
     RCC_APB2PeriphResetCmd(RCC_APB2Periph_AFIO, DISABLE);
 }
 
+/// @brief initialize given GPIO port
+/// @param port to initialize. Ideally use Pin.port
+void gpio_port_init(GPIOPort *port) {
+    if (port == GPIOA) {
+        RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
+        return;
+    }
+    if (port == GPIOC) {
+        RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);
+        return;
+    }
+    if (port == GPIOD) {
+        RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOD, ENABLE);
+        return;
+    }
+    //unknown port
+}
+
 /*********************************************************************
  * @fn      gpio_init
  *
@@ -74,6 +92,9 @@ void gpio_afio_deinit(void)
  */
 void gpio_init(GPIOInit gpio)
 {
+
+    gpio_port_init(gpio.pin.port);
+
     uint32_t currentmode = 0x00, currentpin = 0x00, pinpos = 0x00, pos = 0x00;
     uint32_t tmpreg = 0x00, pinmask = 0x00;
 

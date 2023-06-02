@@ -12,9 +12,7 @@
 #ifndef __SYSTEM_CH32V00x_H
 #define __SYSTEM_CH32V00x_H
 
-#ifdef __cplusplus
- extern "C" {
-#endif 
+#include <stdint.h>
 
 extern uint32_t SystemCoreClock;          /* System Clock Frequency (Core Clock) */
 
@@ -27,22 +25,9 @@ enum SYSCLK {
     SYSCLK_8MHz_HSE,
 };
 
-typedef struct {
-    enum SYSCLK sysclk;
-    void (*custom_nmi_handler_func)(void);
-    void (*custom_hard_fault_handler_func)(void);
-} SystemSetup;
-
 /* System_Exported_Functions */  
 extern void SystemInit(void);
 extern void SystemCoreClockUpdate(void);
-
-void system_setup(SystemSetup systemSetup);
-
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /*__CH32V00x_SYSTEM_H */
 

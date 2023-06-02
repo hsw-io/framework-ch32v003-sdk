@@ -13,19 +13,17 @@
 #ifndef __CH32V00x_GPIO_H
 #define __CH32V00x_GPIO_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include <ch32v00x.h>
+#include <stddef.h>
+
 
 /* Output Maximum frequency selection */
 typedef enum
 {
-    GPIO_Speed_10MHz = 1,
-    GPIO_Speed_2MHz,
-    GPIO_Speed_50MHz
-} GPIOSpeed;
+    GPIO_SPEED_10MHz = 1,
+    GPIO_SPEED_2MHz,
+    GPIO_SPEED_50MHz
+} GPIO_SPEED;
 
 
 /* GPIO configuration mode enumeration */
@@ -47,6 +45,7 @@ typedef struct {
     GPIOPort* port;
     uint16_t num;
 } Pin;
+
 
 #define PIN_PA_0 (Pin){.port = GPIOA, .num = GPIO_Pin_0}
 #define PIN_PA_1 (Pin){.port = GPIOA, .num = GPIO_Pin_1}
@@ -75,18 +74,21 @@ typedef struct {
 #define PIN_PD_6 (Pin){.port = GPIOD, .num = GPIO_Pin_6}
 #define PIN_PD_7 (Pin){.port = GPIOD, .num = GPIO_Pin_7}
 
+
 /* GPIO Init structure definition */
-typedef struct
-{
-    Pin pin; /* Specifies the GPIO pins to be configured.
-            This parameter can be any value of @ref GPIO_pins_define */
-
-    GPIOSpeed speed; /* Specifies the speed for the selected pins.
-            This parameter can be a value of @ref GPIOSpeed */
-
-    GPIO_MODE mode; /* Specifies the operating mode for the selected pins.
-            This parameter can be a value of @ref GPIO_MODE */
+typedef struct {
+    Pin pin;
+    GPIO_SPEED speed;
+    GPIO_MODE mode;
 } GPIOInit;
+
+typedef struct {
+    size_t len;
+    GPIOInit *pins_init;
+} GPIOsInit;
+
+#define GPIO_S_INIT(arr) (GPIOsInit) { .len = sizeof(arr)/sizeof(GPIOInit), .pins_init = arr }
+
 
 /* Bit_SET and Bit_RESET enumeration */
 typedef enum
@@ -94,6 +96,7 @@ typedef enum
     Bit_RESET = 0,
     Bit_SET
 } BitAction;
+
 
 /* GPIO_pins_define */
 #define GPIO_Pin_0                     ((uint16_t)0x0001) /* Pin 0 selected */
@@ -105,6 +108,7 @@ typedef enum
 #define GPIO_Pin_6                     ((uint16_t)0x0040) /* Pin 6 selected */
 #define GPIO_Pin_7                     ((uint16_t)0x0080) /* Pin 7 selected */
 #define GPIO_Pin_All                   ((uint16_t)0xFFFF) /* All pins selected */
+
 
 /* GPIO_Remap_define */
 #define GPIO_Remap_SPI1                ((uint32_t)0x00000001) /* SPI1 Alternate Function mapping */
@@ -125,10 +129,12 @@ typedef enum
 #define GPIO_Remap_LSI_CAL             ((uint32_t)0x00200080) /* LSI calibration Alternate Function mapping */
 #define GPIO_Remap_SDI_Disable         ((uint32_t)0x00300400) /* SDI Disabled */
 
+
 /* GPIO_Port_Sources */
 #define GPIO_PortSourceGPIOA           ((uint8_t)0x00)
 #define GPIO_PortSourceGPIOC           ((uint8_t)0x02)
 #define GPIO_PortSourceGPIOD           ((uint8_t)0x03)
+
 
 /* GPIO_Pin_sources */
 #define GPIO_PinSource0                ((uint8_t)0x00)
@@ -139,6 +145,7 @@ typedef enum
 #define GPIO_PinSource5                ((uint8_t)0x05)
 #define GPIO_PinSource6                ((uint8_t)0x06)
 #define GPIO_PinSource7                ((uint8_t)0x07)
+
 
 void     gpio_deinit(GPIOPort *GPIOx);
 void     gpio_afio_deinit(void);
@@ -155,8 +162,5 @@ void     GPIO_EventOutputCmd(FunctionalState NewState);
 void     GPIO_PinRemapConfig(uint32_t GPIO_Remap, FunctionalState NewState);
 void     GPIO_EXTILineConfig(uint8_t GPIO_PortSource, uint8_t GPIO_PinSource);
 
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* __CH32V00x_GPIO_H */
