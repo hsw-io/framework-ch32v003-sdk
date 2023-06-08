@@ -158,13 +158,13 @@ typedef struct
 #define DMA1_FLAG_TE7                      ((uint32_t)0x08000000)
 
 
-void       DMA_DeInit(DMA_Channel_TypeDef *DMAy_Channelx);
-void       DMA_Init(DMA_Channel_TypeDef *DMAy_Channelx, DMA_InitTypeDef *DMA_InitStruct);
+void       DMA_DeInit(DMA_ChannelPRegs *DMAy_Channelx);
+void       DMA_Init(DMA_ChannelPRegs *DMAy_Channelx, DMA_InitTypeDef *DMA_InitStruct);
 void       DMA_StructInit(DMA_InitTypeDef *DMA_InitStruct);
-void       DMA_Cmd(DMA_Channel_TypeDef *DMAy_Channelx, FunctionalState NewState);
-void       DMA_ITConfig(DMA_Channel_TypeDef *DMAy_Channelx, uint32_t DMA_IT, FunctionalState NewState);
-void       DMA_SetCurrDataCounter(DMA_Channel_TypeDef *DMAy_Channelx, uint16_t DataNumber);
-uint16_t   DMA_GetCurrDataCounter(DMA_Channel_TypeDef *DMAy_Channelx);
+void       DMA_Cmd(DMA_ChannelPRegs *DMAy_Channelx, FunctionalState NewState);
+void       DMA_ITConfig(DMA_ChannelPRegs *DMAy_Channelx, uint32_t DMA_IT, FunctionalState NewState);
+void       DMA_SetCurrDataCounter(DMA_ChannelPRegs *DMAy_Channelx, uint16_t DataNumber);
+uint16_t   DMA_GetCurrDataCounter(DMA_ChannelPRegs *DMAy_Channelx);
 FlagStatus DMA_GetFlagStatus(uint32_t DMAy_FLAG);
 void       DMA_ClearFlag(uint32_t DMAy_FLAG);
 ITStatus   DMA_GetITStatus(uint32_t DMAy_IT);

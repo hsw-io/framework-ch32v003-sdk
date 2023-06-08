@@ -38,7 +38,7 @@
  *
  * @return  none
  */
-void DMA_DeInit(DMA_Channel_TypeDef *DMAy_Channelx)
+void DMA_DeInit(DMA_ChannelPRegs *DMAy_Channelx)
 {
     DMAy_Channelx->CFGR &= (uint16_t)(~DMA_CFGR1_EN);
     DMAy_Channelx->CFGR = 0;
@@ -88,7 +88,7 @@ void DMA_DeInit(DMA_Channel_TypeDef *DMAy_Channelx)
  *
  * @return  none
  */
-void DMA_Init(DMA_Channel_TypeDef *DMAy_Channelx, DMA_InitTypeDef *DMA_InitStruct)
+void DMA_Init(DMA_ChannelPRegs *DMAy_Channelx, DMA_InitTypeDef *DMA_InitStruct)
 {
     uint32_t tmpreg = 0;
 
@@ -143,7 +143,7 @@ void DMA_StructInit(DMA_InitTypeDef *DMA_InitStruct)
  *
  * @return  none
  */
-void DMA_Cmd(DMA_Channel_TypeDef *DMAy_Channelx, FunctionalState NewState)
+void DMA_Cmd(DMA_ChannelPRegs *DMAy_Channelx, FunctionalState NewState)
 {
     if(NewState != DISABLE)
     {
@@ -171,7 +171,7 @@ void DMA_Cmd(DMA_Channel_TypeDef *DMAy_Channelx, FunctionalState NewState)
  *
  * @return  none
  */
-void DMA_ITConfig(DMA_Channel_TypeDef *DMAy_Channelx, uint32_t DMA_IT, FunctionalState NewState)
+void DMA_ITConfig(DMA_ChannelPRegs *DMAy_Channelx, uint32_t DMA_IT, FunctionalState NewState)
 {
     if(NewState != DISABLE)
     {
@@ -195,7 +195,7 @@ void DMA_ITConfig(DMA_Channel_TypeDef *DMAy_Channelx, uint32_t DMA_IT, Functiona
  *
  * @return  none
  */
-void DMA_SetCurrDataCounter(DMA_Channel_TypeDef *DMAy_Channelx, uint16_t DataNumber)
+void DMA_SetCurrDataCounter(DMA_ChannelPRegs *DMAy_Channelx, uint16_t DataNumber)
 {
     DMAy_Channelx->CNTR = DataNumber;
 }
@@ -212,7 +212,7 @@ void DMA_SetCurrDataCounter(DMA_Channel_TypeDef *DMAy_Channelx, uint16_t DataNum
  * @return  DataNumber - The number of remaining data units in the current
  *        DMAy Channelx transfer.
  */
-uint16_t DMA_GetCurrDataCounter(DMA_Channel_TypeDef *DMAy_Channelx)
+uint16_t DMA_GetCurrDataCounter(DMA_ChannelPRegs *DMAy_Channelx)
 {
     return ((uint16_t)(DMAy_Channelx->CNTR));
 }

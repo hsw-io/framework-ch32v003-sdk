@@ -10,7 +10,6 @@ typedef struct {
     enum SYSCLK sysclk;
     void (*custom_nmi_handler_func)(void);
     void (*custom_hard_fault_handler_func)(void);
-    GPIOsInit gpios;
 } Setup;
 
 void setup(Setup setup);

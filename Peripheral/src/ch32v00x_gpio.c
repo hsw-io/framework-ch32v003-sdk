@@ -29,7 +29,7 @@
  *
  * @return  none
  */
-void gpio_deinit(GPIOPort *port)
+void gpio_deinit(GPIO_Regs *port)
 {
     if(port == GPIOA)
     {
@@ -64,7 +64,7 @@ void gpio_afio_deinit(void)
 
 /// @brief initialize given GPIO port
 /// @param port to initialize. Ideally use Pin.port
-void gpio_port_init(GPIOPort *port) {
+void gpio_port_init(GPIO_Regs *port) {
     if (port == GPIOA) {
         RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
         return;
@@ -80,20 +80,16 @@ void gpio_port_init(GPIOPort *port) {
     //unknown port
 }
 
-/*********************************************************************
- * @fn      gpio_init
- *
- * @brief   configure GPIO pin
- *
- * @param   gpio  GPIOInit structure that
- *        contains the configuration information for the specified GPIO peripheral.
- *
- * @return  none
- */
-void gpio_init(GPIOInit gpio)
+/// @brief   configure GPIO pin
+/// @param   gpio  GPIO_PinConfig structure
+/// @return  none
+void gpio_init(GPIO_PinConfig gpio)
 {
-
     gpio_port_init(gpio.pin.port);
+    if (gpio.mode == GPIO_MODE_alt_func_open_drain ||
+        gpio.mode == GPIO_MODE_alt_func_push_pull) {
+            RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);
+    }
 
     uint32_t currentmode = 0x00, currentpin = 0x00, pinpos = 0x00, pos = 0x00;
     uint32_t tmpreg = 0x00, pinmask = 0x00;
@@ -201,7 +197,7 @@ uint8_t gpio_read_bit(Pin pin)
  *
  * @return  The input port pin value.
  */
-uint16_t gpio_read(GPIOPort *port)
+uint16_t gpio_read(GPIO_Regs *port)
 {
     return ((uint16_t)port->INDR);
 }
@@ -238,7 +234,7 @@ uint8_t gpio_read_output_bit(Pin pin) {
  *
  * @return  GPIO output port pin value.
  */
-uint16_t gpio_read_output(GPIOPort *port)
+uint16_t gpio_read_output(GPIO_Regs *port)
 {
     return ((uint16_t)port->OUTDR);
 }
@@ -275,7 +271,7 @@ void gpio_write_bit(Pin pin, BitAction action)
  *
  * @return  none
  */
-void gpio_write(GPIOPort *port, uint16_t value)
+void gpio_write(GPIO_Regs *port, uint16_t value)
 {
     port->OUTDR = value;
 }
@@ -291,7 +287,7 @@ void gpio_write(GPIOPort *port, uint16_t value)
  *
  * @return  none
  */
-void GPIO_PinLockConfig(GPIOPort *port, uint16_t pin)
+void GPIO_PinLockConfig(GPIO_Regs *port, uint16_t pin)
 {
     uint32_t tmp = 0x00010000;
 

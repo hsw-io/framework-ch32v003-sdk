@@ -79,7 +79,7 @@ void USART_Printf_Init(uint32_t baudrate)
 
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOD | RCC_APB2Periph_USART1, ENABLE);
 
-    gpio_init((GPIOInit) {
+    gpio_init((GPIO_PinConfig) {
         .pin = PIN_PD_5,
         .speed = GPIO_SPEED_50MHz,
         .mode = GPIO_MODE_alt_func_push_pull,

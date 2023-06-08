@@ -114,7 +114,7 @@
  *
  * @return  none
  */
-void ADC_DeInit(ADC_TypeDef *ADCx)
+void ADC_DeInit(ADC_MMRegs *ADCx)
 {
     if(ADCx == ADC1)
     {
@@ -136,7 +136,7 @@ void ADC_DeInit(ADC_TypeDef *ADCx)
  *
  * @return  none
  */
-void ADC_Init(ADC_TypeDef *ADCx, ADC_InitTypeDef *ADC_InitStruct)
+void ADC_Init(ADC_MMRegs *ADCx, ADC_InitTypeDef *ADC_InitStruct)
 {
     uint32_t tmpreg1 = 0;
     uint8_t tmpreg2 = 0;
@@ -190,7 +190,7 @@ void ADC_StructInit(ADC_InitTypeDef *ADC_InitStruct)
  *
  * @return  none
  */
-void ADC_Cmd(ADC_TypeDef *ADCx, FunctionalState NewState)
+void ADC_Cmd(ADC_MMRegs *ADCx, FunctionalState NewState)
 {
     if(NewState != DISABLE)
     {
@@ -212,7 +212,7 @@ void ADC_Cmd(ADC_TypeDef *ADCx, FunctionalState NewState)
  *
  * @return  none
  */
-void ADC_DMACmd(ADC_TypeDef *ADCx, FunctionalState NewState)
+void ADC_DMACmd(ADC_MMRegs *ADCx, FunctionalState NewState)
 {
     if(NewState != DISABLE)
     {
@@ -238,7 +238,7 @@ void ADC_DMACmd(ADC_TypeDef *ADCx, FunctionalState NewState)
  *
  * @return  none
  */
-void ADC_ITConfig(ADC_TypeDef *ADCx, uint16_t ADC_IT, FunctionalState NewState)
+void ADC_ITConfig(ADC_MMRegs *ADCx, uint16_t ADC_IT, FunctionalState NewState)
 {
     uint8_t itmask = 0;
 
@@ -263,7 +263,7 @@ void ADC_ITConfig(ADC_TypeDef *ADCx, uint16_t ADC_IT, FunctionalState NewState)
  *
  * @return  none
  */
-void ADC_ResetCalibration(ADC_TypeDef *ADCx)
+void ADC_ResetCalibration(ADC_MMRegs *ADCx)
 {
     ADCx->CTLR2 |= CTLR2_RSTCAL_Set;
 }
@@ -277,7 +277,7 @@ void ADC_ResetCalibration(ADC_TypeDef *ADCx)
  *
  * @return  FlagStatus: SET or RESET.
  */
-FlagStatus ADC_GetResetCalibrationStatus(ADC_TypeDef *ADCx)
+FlagStatus ADC_GetResetCalibrationStatus(ADC_MMRegs *ADCx)
 {
     FlagStatus bitstatus = RESET;
 
@@ -302,7 +302,7 @@ FlagStatus ADC_GetResetCalibrationStatus(ADC_TypeDef *ADCx)
  *
  * @return  None
  */
-void ADC_StartCalibration(ADC_TypeDef *ADCx)
+void ADC_StartCalibration(ADC_MMRegs *ADCx)
 {
     ADCx->CTLR2 |= CTLR2_CAL_Set;
 }
@@ -316,7 +316,7 @@ void ADC_StartCalibration(ADC_TypeDef *ADCx)
  *
  * @return  FlagStatus: SET or RESET.
  */
-FlagStatus ADC_GetCalibrationStatus(ADC_TypeDef *ADCx)
+FlagStatus ADC_GetCalibrationStatus(ADC_MMRegs *ADCx)
 {
     FlagStatus bitstatus = RESET;
 
@@ -342,7 +342,7 @@ FlagStatus ADC_GetCalibrationStatus(ADC_TypeDef *ADCx)
  *
  * @return  None
  */
-void ADC_SoftwareStartConvCmd(ADC_TypeDef *ADCx, FunctionalState NewState)
+void ADC_SoftwareStartConvCmd(ADC_MMRegs *ADCx, FunctionalState NewState)
 {
     if(NewState != DISABLE)
     {
@@ -363,7 +363,7 @@ void ADC_SoftwareStartConvCmd(ADC_TypeDef *ADCx, FunctionalState NewState)
  *
  * @return  FlagStatus - SET or RESET.
  */
-FlagStatus ADC_GetSoftwareStartConvStatus(ADC_TypeDef *ADCx)
+FlagStatus ADC_GetSoftwareStartConvStatus(ADC_MMRegs *ADCx)
 {
     FlagStatus bitstatus = RESET;
 
@@ -391,7 +391,7 @@ FlagStatus ADC_GetSoftwareStartConvStatus(ADC_TypeDef *ADCx)
  *
  * @return  None
  */
-void ADC_DiscModeChannelCountConfig(ADC_TypeDef *ADCx, uint8_t Number)
+void ADC_DiscModeChannelCountConfig(ADC_MMRegs *ADCx, uint8_t Number)
 {
     uint32_t tmpreg1 = 0;
     uint32_t tmpreg2 = 0;
@@ -414,7 +414,7 @@ void ADC_DiscModeChannelCountConfig(ADC_TypeDef *ADCx, uint8_t Number)
  *
  * @return  None
  */
-void ADC_DiscModeCmd(ADC_TypeDef *ADCx, FunctionalState NewState)
+void ADC_DiscModeCmd(ADC_MMRegs *ADCx, FunctionalState NewState)
 {
     if(NewState != DISABLE)
     {
@@ -458,7 +458,7 @@ void ADC_DiscModeCmd(ADC_TypeDef *ADCx, FunctionalState NewState)
  *
  * @return  None
  */
-void ADC_RegularChannelConfig(ADC_TypeDef *ADCx, uint8_t ADC_Channel, uint8_t Rank, uint8_t ADC_SampleTime)
+void ADC_RegularChannelConfig(ADC_MMRegs *ADCx, uint8_t ADC_Channel, uint8_t Rank, uint8_t ADC_SampleTime)
 {
     uint32_t tmpreg1 = 0, tmpreg2 = 0;
 
@@ -520,7 +520,7 @@ void ADC_RegularChannelConfig(ADC_TypeDef *ADCx, uint8_t ADC_Channel, uint8_t Ra
  *
  * @return  None
  */
-void ADC_ExternalTrigConvCmd(ADC_TypeDef *ADCx, FunctionalState NewState)
+void ADC_ExternalTrigConvCmd(ADC_MMRegs *ADCx, FunctionalState NewState)
 {
     if(NewState != DISABLE)
     {
@@ -541,7 +541,7 @@ void ADC_ExternalTrigConvCmd(ADC_TypeDef *ADCx, FunctionalState NewState)
  *
  * @return  ADCx->RDATAR - The Data conversion value.
  */
-uint16_t ADC_GetConversionValue(ADC_TypeDef *ADCx)
+uint16_t ADC_GetConversionValue(ADC_MMRegs *ADCx)
 {
     return (uint16_t)ADCx->RDATAR;
 }
@@ -557,7 +557,7 @@ uint16_t ADC_GetConversionValue(ADC_TypeDef *ADCx)
  *
  * @return  None
  */
-void ADC_AutoInjectedConvCmd(ADC_TypeDef *ADCx, FunctionalState NewState)
+void ADC_AutoInjectedConvCmd(ADC_MMRegs *ADCx, FunctionalState NewState)
 {
     if(NewState != DISABLE)
     {
@@ -580,7 +580,7 @@ void ADC_AutoInjectedConvCmd(ADC_TypeDef *ADCx, FunctionalState NewState)
  *
  * @return  None
  */
-void ADC_InjectedDiscModeCmd(ADC_TypeDef *ADCx, FunctionalState NewState)
+void ADC_InjectedDiscModeCmd(ADC_MMRegs *ADCx, FunctionalState NewState)
 {
     if(NewState != DISABLE)
     {
@@ -611,7 +611,7 @@ void ADC_InjectedDiscModeCmd(ADC_TypeDef *ADCx, FunctionalState NewState)
  *
  * @return  None
  */
-void ADC_ExternalTrigInjectedConvConfig(ADC_TypeDef *ADCx, uint32_t ADC_ExternalTrigInjecConv)
+void ADC_ExternalTrigInjectedConvConfig(ADC_MMRegs *ADCx, uint32_t ADC_ExternalTrigInjecConv)
 {
     uint32_t tmpreg = 0;
 
@@ -632,7 +632,7 @@ void ADC_ExternalTrigInjectedConvConfig(ADC_TypeDef *ADCx, uint32_t ADC_External
  *
  * @return  None
  */
-void ADC_ExternalTrigInjectedConvCmd(ADC_TypeDef *ADCx, FunctionalState NewState)
+void ADC_ExternalTrigInjectedConvCmd(ADC_MMRegs *ADCx, FunctionalState NewState)
 {
     if(NewState != DISABLE)
     {
@@ -655,7 +655,7 @@ void ADC_ExternalTrigInjectedConvCmd(ADC_TypeDef *ADCx, FunctionalState NewState
  *
  * @return  None
  */
-void ADC_SoftwareStartInjectedConvCmd(ADC_TypeDef *ADCx, FunctionalState NewState)
+void ADC_SoftwareStartInjectedConvCmd(ADC_MMRegs *ADCx, FunctionalState NewState)
 {
     if(NewState != DISABLE)
     {
@@ -676,7 +676,7 @@ void ADC_SoftwareStartInjectedConvCmd(ADC_TypeDef *ADCx, FunctionalState NewStat
  *
  * @return  FlagStatus: SET or RESET.
  */
-FlagStatus ADC_GetSoftwareStartInjectedConvCmdStatus(ADC_TypeDef *ADCx)
+FlagStatus ADC_GetSoftwareStartInjectedConvCmdStatus(ADC_MMRegs *ADCx)
 {
     FlagStatus bitstatus = RESET;
 
@@ -724,7 +724,7 @@ FlagStatus ADC_GetSoftwareStartInjectedConvCmdStatus(ADC_TypeDef *ADCx)
  *
  * @return  None
  */
-void ADC_InjectedChannelConfig(ADC_TypeDef *ADCx, uint8_t ADC_Channel, uint8_t Rank, uint8_t ADC_SampleTime)
+void ADC_InjectedChannelConfig(ADC_MMRegs *ADCx, uint8_t ADC_Channel, uint8_t Rank, uint8_t ADC_SampleTime)
 {
     uint32_t tmpreg1 = 0, tmpreg2 = 0, tmpreg3 = 0;
 
@@ -767,7 +767,7 @@ void ADC_InjectedChannelConfig(ADC_TypeDef *ADCx, uint8_t ADC_Channel, uint8_t R
  *
  * @return  None
  */
-void ADC_InjectedSequencerLengthConfig(ADC_TypeDef *ADCx, uint8_t Length)
+void ADC_InjectedSequencerLengthConfig(ADC_MMRegs *ADCx, uint8_t Length)
 {
     uint32_t tmpreg1 = 0;
     uint32_t tmpreg2 = 0;
@@ -795,7 +795,7 @@ void ADC_InjectedSequencerLengthConfig(ADC_TypeDef *ADCx, uint8_t Length)
  *
  * @return  None
  */
-void ADC_SetInjectedOffset(ADC_TypeDef *ADCx, uint8_t ADC_InjectedChannel, uint16_t Offset)
+void ADC_SetInjectedOffset(ADC_MMRegs *ADCx, uint8_t ADC_InjectedChannel, uint16_t Offset)
 {
     __IO uint32_t tmp = 0;
 
@@ -819,7 +819,7 @@ void ADC_SetInjectedOffset(ADC_TypeDef *ADCx, uint8_t ADC_InjectedChannel, uint1
  *
  * @return  tmp - The Data conversion value.
  */
-uint16_t ADC_GetInjectedConversionValue(ADC_TypeDef *ADCx, uint8_t ADC_InjectedChannel)
+uint16_t ADC_GetInjectedConversionValue(ADC_MMRegs *ADCx, uint8_t ADC_InjectedChannel)
 {
     __IO uint32_t tmp = 0;
 
@@ -854,7 +854,7 @@ uint16_t ADC_GetInjectedConversionValue(ADC_TypeDef *ADCx, uint8_t ADC_InjectedC
  *
  * @return  none
  */
-void ADC_AnalogWatchdogCmd(ADC_TypeDef *ADCx, uint32_t ADC_AnalogWatchdog)
+void ADC_AnalogWatchdogCmd(ADC_MMRegs *ADCx, uint32_t ADC_AnalogWatchdog)
 {
     uint32_t tmpreg = 0;
 
@@ -877,7 +877,7 @@ void ADC_AnalogWatchdogCmd(ADC_TypeDef *ADCx, uint32_t ADC_AnalogWatchdog)
  *
  * @return  none
  */
-void ADC_AnalogWatchdogThresholdsConfig(ADC_TypeDef *ADCx, uint16_t HighThreshold,
+void ADC_AnalogWatchdogThresholdsConfig(ADC_MMRegs *ADCx, uint16_t HighThreshold,
                                         uint16_t LowThreshold)
 {
     ADCx->WDHTR = HighThreshold;
@@ -904,7 +904,7 @@ void ADC_AnalogWatchdogThresholdsConfig(ADC_TypeDef *ADCx, uint16_t HighThreshol
  *
  * @return  None
  */
-void ADC_AnalogWatchdogSingleChannelConfig(ADC_TypeDef *ADCx, uint8_t ADC_Channel)
+void ADC_AnalogWatchdogSingleChannelConfig(ADC_MMRegs *ADCx, uint8_t ADC_Channel)
 {
     uint32_t tmpreg = 0;
 
@@ -929,7 +929,7 @@ void ADC_AnalogWatchdogSingleChannelConfig(ADC_TypeDef *ADCx, uint8_t ADC_Channe
  *
  * @return  FlagStatus: SET or RESET.
  */
-FlagStatus ADC_GetFlagStatus(ADC_TypeDef *ADCx, uint8_t ADC_FLAG)
+FlagStatus ADC_GetFlagStatus(ADC_MMRegs *ADCx, uint8_t ADC_FLAG)
 {
     FlagStatus bitstatus = RESET;
 
@@ -960,7 +960,7 @@ FlagStatus ADC_GetFlagStatus(ADC_TypeDef *ADCx, uint8_t ADC_FLAG)
  *
  * @return  none
  */
-void ADC_ClearFlag(ADC_TypeDef *ADCx, uint8_t ADC_FLAG)
+void ADC_ClearFlag(ADC_MMRegs *ADCx, uint8_t ADC_FLAG)
 {
     ADCx->STATR = ~(uint32_t)ADC_FLAG;
 }
@@ -978,7 +978,7 @@ void ADC_ClearFlag(ADC_TypeDef *ADCx, uint8_t ADC_FLAG)
  *
  * @return  ITStatus: SET or RESET.
  */
-ITStatus ADC_GetITStatus(ADC_TypeDef *ADCx, uint16_t ADC_IT)
+ITStatus ADC_GetITStatus(ADC_MMRegs *ADCx, uint16_t ADC_IT)
 {
     ITStatus bitstatus = RESET;
     uint32_t itmask = 0, enablestatus = 0;
@@ -1011,7 +1011,7 @@ ITStatus ADC_GetITStatus(ADC_TypeDef *ADCx, uint16_t ADC_IT)
  *
  * @return  none
  */
-void ADC_ClearITPendingBit(ADC_TypeDef *ADCx, uint16_t ADC_IT)
+void ADC_ClearITPendingBit(ADC_MMRegs *ADCx, uint16_t ADC_IT)
 {
     uint8_t itmask = 0;
 
@@ -1031,7 +1031,7 @@ void ADC_ClearITPendingBit(ADC_TypeDef *ADCx, uint16_t ADC_IT)
  *
  * @return  none
  */
-void ADC_Calibration_Vol(ADC_TypeDef *ADCx, uint32_t ADC_CALVOL)
+void ADC_Calibration_Vol(ADC_MMRegs *ADCx, uint32_t ADC_CALVOL)
 {
     ADCx->CTLR1 &= ~(uint32_t)(3<<25);
     ADCx->CTLR1 |= ADC_CALVOL;
@@ -1051,7 +1051,7 @@ void ADC_Calibration_Vol(ADC_TypeDef *ADCx, uint32_t ADC_CALVOL)
  *
  * @return  none
  */
-void ADC_ExternalTrig_DLY(ADC_TypeDef *ADCx, uint32_t channel, uint16_t DelayTim)
+void ADC_ExternalTrig_DLY(ADC_MMRegs *ADCx, uint32_t channel, uint16_t DelayTim)
 {
     ADCx->DLYR &= ~(uint32_t)(0x2FF);
     ADCx->DLYR |= channel;

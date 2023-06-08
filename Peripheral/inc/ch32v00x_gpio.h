@@ -35,14 +35,14 @@ typedef enum
     GPIO_MODE_in_pull_up = 0x48,
     GPIO_MODE_out_open_drain = 0x14,
     GPIO_MODE_out_push_pull = 0x10,
-    GPIO_MODE_alt_func_open_drain_OD = 0x1C,
+    GPIO_MODE_alt_func_open_drain = 0x1C,
     GPIO_MODE_alt_func_push_pull = 0x18
 } GPIO_MODE;
 
 
 // GPIO Pin structure definition
 typedef struct {
-    GPIOPort* port;
+    GPIO_Regs* port;
     uint16_t num;
 } Pin;
 
@@ -75,19 +75,12 @@ typedef struct {
 #define PIN_PD_7 (Pin){.port = GPIOD, .num = GPIO_Pin_7}
 
 
-/* GPIO Init structure definition */
+// GPIO Init structure definition
 typedef struct {
     Pin pin;
     GPIO_SPEED speed;
     GPIO_MODE mode;
-} GPIOInit;
-
-typedef struct {
-    size_t len;
-    GPIOInit *pins_init;
-} GPIOsInit;
-
-#define GPIO_S_INIT(arr) (GPIOsInit) { .len = sizeof(arr)/sizeof(GPIOInit), .pins_init = arr }
+} GPIO_PinConfig;
 
 
 /* Bit_SET and Bit_RESET enumeration */
@@ -147,16 +140,16 @@ typedef enum
 #define GPIO_PinSource7                ((uint8_t)0x07)
 
 
-void     gpio_deinit(GPIOPort *GPIOx);
+void     gpio_deinit(GPIO_Regs *GPIOx);
 void     gpio_afio_deinit(void);
-void     gpio_init(GPIOInit gpio_init);
+void     gpio_init(GPIO_PinConfig gpio_init);
 uint8_t  gpio_read_bit(Pin pin);
-uint16_t gpio_read(GPIOPort *GPIOx);
+uint16_t gpio_read(GPIO_Regs *GPIOx);
 uint8_t  gpio_read_output_bit(Pin pin);
-uint16_t gpio_read_output(GPIOPort *GPIOx);
+uint16_t gpio_read_output(GPIO_Regs *GPIOx);
 void     gpio_write_bit(Pin pin, BitAction action);
-void     gpio_write(GPIOPort *GPIOx, uint16_t PortVal);
-void     GPIO_PinLockConfig(GPIOPort *GPIOx, uint16_t pin);
+void     gpio_write(GPIO_Regs *GPIOx, uint16_t PortVal);
+void     GPIO_PinLockConfig(GPIO_Regs *GPIOx, uint16_t pin);
 void     GPIO_EventOutputConfig(uint8_t GPIO_PortSource, uint8_t GPIO_PinSource);
 void     GPIO_EventOutputCmd(FunctionalState NewState);
 void     GPIO_PinRemapConfig(uint32_t GPIO_Remap, FunctionalState NewState);

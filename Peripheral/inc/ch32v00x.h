@@ -12,10 +12,6 @@
 #ifndef __CH32V00x_H
 #define __CH32V00x_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #define __MPU_PRESENT             0  /* Other CH32 devices does not provide an MPU */
 #define __Vendor_SysTickConfig    0  /* Set to 1 if different SysTick Config is used */
 
@@ -74,7 +70,7 @@ typedef enum IRQn
 #define HSE_Value             HSE_VALUE
 #define HSEStartUp_TimeOut    HSE_STARTUP_TIMEOUT
 
-/* Analog to Digital Converter */
+// Analog to Digital Converter perif registers
 typedef struct
 {
     __IO uint32_t STATR;
@@ -98,44 +94,42 @@ typedef struct
     __IO uint32_t IDATAR4;
     __IO uint32_t RDATAR;
     __IO uint32_t DLYR;
-} ADC_TypeDef;
+} ADC_PRegs;
 
-/* Debug MCU */
+// Debug MCU Registers
 typedef struct
 {
     __IO uint32_t CFGR0;
     __IO uint32_t CFGR1;
-} DBGMCU_TypeDef;
+} DBGMCU_PRegs;
 
-/* DMA Controller */
+// DMA Controller Channel
 typedef struct
 {
     __IO uint32_t CFGR;
     __IO uint32_t CNTR;
     __IO uint32_t PADDR;
     __IO uint32_t MADDR;
-} DMA_Channel_TypeDef;
+} DMA_ChannelPRegs;
 
-typedef struct
-{
+// DMA Controller
+typedef struct {
     __IO uint32_t INTFR;
     __IO uint32_t INTFCR;
-} DMA_TypeDef;
+} DMA_PRegs;
 
-/* External Interrupt/Event Controller */
-typedef struct
-{
+// External Interrupt/Event Controller
+typedef struct {
     __IO uint32_t INTENR;
     __IO uint32_t EVENR;
     __IO uint32_t RTENR;
     __IO uint32_t FTENR;
     __IO uint32_t SWIEVR;
     __IO uint32_t INTFR;
-} EXTI_TypeDef;
+} EXTI_PRegs;
 
-/* FLASH Registers */
-typedef struct
-{
+// FLASH Registers
+typedef struct {
     __IO uint32_t ACTLR;
     __IO uint32_t KEYR;
     __IO uint32_t OBKEYR;
@@ -147,22 +141,20 @@ typedef struct
     __IO uint32_t WPR;
     __IO uint32_t MODEKEYR;
     __IO uint32_t BOOT_MODEKEYR;
-} FLASH_TypeDef;
+} FLASH_PRegs;
 
-/* Option Bytes Registers */
-typedef struct
-{
+// Option Bytes Registers
+typedef struct {
     __IO uint16_t RDPR;
     __IO uint16_t USER;
     __IO uint16_t Data0;
     __IO uint16_t Data1;
     __IO uint16_t WRPR0;
     __IO uint16_t WRPR1;
-} OB_TypeDef;
+} OB_Regs;
 
-/* General Purpose I/O */
-typedef struct
-{
+// General Purpose I/O
+typedef struct {
     __IO uint32_t CFGLR;
     __IO uint32_t CFGHR;
     __IO uint32_t INDR;
@@ -170,19 +162,17 @@ typedef struct
     __IO uint32_t BSHR;
     __IO uint32_t BCR;
     __IO uint32_t LCKR;
-} GPIOPort;
+} GPIO_Regs;
 
-/* Alternate Function I/O */
-typedef struct
-{
+// Alternate Function I/O
+typedef struct {
     uint32_t RESERVED0;
     __IO uint32_t PCFR1;
     __IO uint32_t EXTICR;
-} AFIO_TypeDef;
+} AFIO_Regs;
 
-/* Inter Integrated Circuit Interface */
-typedef struct
-{
+// Inter Integrated Circuit Interface
+typedef struct {
     __IO uint16_t CTLR1;
     uint16_t      RESERVED0;
     __IO uint16_t CTLR2;
@@ -199,28 +189,26 @@ typedef struct
     uint16_t      RESERVED6;
     __IO uint16_t CKCFGR;
     uint16_t      RESERVED7;
-} I2C_TypeDef;
+} I2C_Regs;
 
-/* Independent WatchDog */
-typedef struct
-{
+// Independent WatchDog
+typedef struct {
     __IO uint32_t CTLR;
     __IO uint32_t PSCR;
     __IO uint32_t RLDR;
     __IO uint32_t STATR;
-} IWDG_TypeDef;
+} IWDG_Regs;
 
-/* Power Control */
-typedef struct
-{
+// Power Control
+typedef struct {
     __IO uint32_t CTLR;
     __IO uint32_t CSR;
     __IO uint32_t AWUCSR;
     __IO uint32_t AWUWR;
     __IO uint32_t AWUPSC;
-} PWR_TypeDef;
+} PWR_Regs;
 
-/* Reset and Clock Control */
+// Reset and Clock Control
 typedef struct
 {
     __IO uint32_t CTLR;
@@ -233,7 +221,7 @@ typedef struct
     __IO uint32_t APB1PCENR;
     __IO uint32_t RESERVED0;
     __IO uint32_t RSTSCKR;
-} RCC_TypeDef;
+} RCC_Regs;
 
 /* Serial Peripheral Interface */
 typedef struct
@@ -374,29 +362,29 @@ typedef struct
 /* Peripheral declaration */
 #define TIM2                                    ((TIM_TypeDef *)TIM2_BASE)
 #define WWDG                                    ((WWDG_TypeDef *)WWDG_BASE)
-#define IWDG                                    ((IWDG_TypeDef *)IWDG_BASE)
-#define I2C1                                    ((I2C_TypeDef *)I2C1_BASE)
-#define PWR                                     ((PWR_TypeDef *)PWR_BASE)
-#define AFIO                                    ((AFIO_TypeDef *)AFIO_BASE)
-#define EXTI                                    ((EXTI_TypeDef *)EXTI_BASE)
-#define GPIOA                                   ((GPIOPort *)GPIOA_BASE)
-#define GPIOC                                   ((GPIOPort *)GPIOC_BASE)
-#define GPIOD                                   ((GPIOPort *)GPIOD_BASE)
-#define ADC1                                    ((ADC_TypeDef *)ADC1_BASE)
+#define IWDG                                    ((IWDG_Regs *)IWDG_BASE)
+#define I2C1                                    ((I2C_Regs *)I2C1_BASE)
+#define PWR                                     ((PWR_Regs *)PWR_BASE)
+#define AFIO                                    ((AFIO_Regs *)AFIO_BASE)
+#define EXTI                                    ((EXTI_Regs *)EXTI_BASE)
+#define GPIOA                                   ((GPIO_Regs *)GPIOA_BASE)
+#define GPIOC                                   ((GPIO_Regs *)GPIOC_BASE)
+#define GPIOD                                   ((GPIO_Regs *)GPIOD_BASE)
+#define ADC1                                    ((ADC_Regs *)ADC1_BASE)
 #define TIM1                                    ((TIM_TypeDef *)TIM1_BASE)
 #define SPI1                                    ((SPI_TypeDef *)SPI1_BASE)
 #define USART1                                  ((USART_TypeDef *)USART1_BASE)
-#define DMA1                                    ((DMA_TypeDef *)DMA1_BASE)
-#define DMA1_Channel1                           ((DMA_Channel_TypeDef *)DMA1_Channel1_BASE)
-#define DMA1_Channel2                           ((DMA_Channel_TypeDef *)DMA1_Channel2_BASE)
-#define DMA1_Channel3                           ((DMA_Channel_TypeDef *)DMA1_Channel3_BASE)
-#define DMA1_Channel4                           ((DMA_Channel_TypeDef *)DMA1_Channel4_BASE)
-#define DMA1_Channel5                           ((DMA_Channel_TypeDef *)DMA1_Channel5_BASE)
-#define DMA1_Channel6                           ((DMA_Channel_TypeDef *)DMA1_Channel6_BASE)
-#define DMA1_Channel7                           ((DMA_Channel_TypeDef *)DMA1_Channel7_BASE)
-#define RCC                                     ((RCC_TypeDef *)RCC_BASE)
-#define FLASH                                   ((FLASH_TypeDef *)FLASH_R_BASE)
-#define OB                                      ((OB_TypeDef *)OB_BASE)
+#define DMA1                                    ((DMA_Regs *)DMA1_BASE)
+#define DMA1_Channel1                           ((DMA_ChannelRegs *)DMA1_Channel1_BASE)
+#define DMA1_Channel2                           ((DMA_ChannelRegs *)DMA1_Channel2_BASE)
+#define DMA1_Channel3                           ((DMA_ChannelRegs *)DMA1_Channel3_BASE)
+#define DMA1_Channel4                           ((DMA_ChannelRegs *)DMA1_Channel4_BASE)
+#define DMA1_Channel5                           ((DMA_ChannelRegs *)DMA1_Channel5_BASE)
+#define DMA1_Channel6                           ((DMA_ChannelRegs *)DMA1_Channel6_BASE)
+#define DMA1_Channel7                           ((DMA_ChannelRegs *)DMA1_Channel7_BASE)
+#define RCC                                     ((RCC_Regs *)RCC_BASE)
+#define FLASH                                   ((FLASH_Regs *)FLASH_R_BASE)
+#define OB                                      ((OB_Regs *)OB_BASE)
 #define EXTEN                                   ((EXTEN_TypeDef *)EXTEN_BASE)
 
 /******************************************************************************/
@@ -2394,9 +2382,5 @@ typedef struct
 #define EXTEN_OPA_PSEL                          ((uint32_t)0x00040000)
 
 #include <ch32v00x_conf.h>
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* __CH32V00x_H */

@@ -132,42 +132,42 @@ typedef struct
 #define ADC_ExternalTrigInjec_DLY                      ((uint32_t)0x00020000)
 
 
-void       ADC_DeInit(ADC_TypeDef *ADCx);
-void       ADC_Init(ADC_TypeDef *ADCx, ADC_InitTypeDef *ADC_InitStruct);
+void       ADC_DeInit(ADC_PRegs *ADCx);
+void       ADC_Init(ADC_PRegs *ADCx, ADC_InitTypeDef *ADC_InitStruct);
 void       ADC_StructInit(ADC_InitTypeDef *ADC_InitStruct);
-void       ADC_Cmd(ADC_TypeDef *ADCx, FunctionalState NewState);
-void       ADC_DMACmd(ADC_TypeDef *ADCx, FunctionalState NewState);
-void       ADC_ITConfig(ADC_TypeDef *ADCx, uint16_t ADC_IT, FunctionalState NewState);
-void       ADC_ResetCalibration(ADC_TypeDef *ADCx);
-FlagStatus ADC_GetResetCalibrationStatus(ADC_TypeDef *ADCx);
-void       ADC_StartCalibration(ADC_TypeDef *ADCx);
-FlagStatus ADC_GetCalibrationStatus(ADC_TypeDef *ADCx);
-void       ADC_SoftwareStartConvCmd(ADC_TypeDef *ADCx, FunctionalState NewState);
-FlagStatus ADC_GetSoftwareStartConvStatus(ADC_TypeDef *ADCx);
-void       ADC_DiscModeChannelCountConfig(ADC_TypeDef *ADCx, uint8_t Number);
-void       ADC_DiscModeCmd(ADC_TypeDef *ADCx, FunctionalState NewState);
-void       ADC_RegularChannelConfig(ADC_TypeDef *ADCx, uint8_t ADC_Channel, uint8_t Rank, uint8_t ADC_SampleTime);
-void       ADC_ExternalTrigConvCmd(ADC_TypeDef *ADCx, FunctionalState NewState);
-uint16_t   ADC_GetConversionValue(ADC_TypeDef *ADCx);
-void       ADC_AutoInjectedConvCmd(ADC_TypeDef *ADCx, FunctionalState NewState);
-void       ADC_InjectedDiscModeCmd(ADC_TypeDef *ADCx, FunctionalState NewState);
-void       ADC_ExternalTrigInjectedConvConfig(ADC_TypeDef *ADCx, uint32_t ADC_ExternalTrigInjecConv);
-void       ADC_ExternalTrigInjectedConvCmd(ADC_TypeDef *ADCx, FunctionalState NewState);
-void       ADC_SoftwareStartInjectedConvCmd(ADC_TypeDef *ADCx, FunctionalState NewState);
-FlagStatus ADC_GetSoftwareStartInjectedConvCmdStatus(ADC_TypeDef *ADCx);
-void       ADC_InjectedChannelConfig(ADC_TypeDef *ADCx, uint8_t ADC_Channel, uint8_t Rank, uint8_t ADC_SampleTime);
-void       ADC_InjectedSequencerLengthConfig(ADC_TypeDef *ADCx, uint8_t Length);
-void       ADC_SetInjectedOffset(ADC_TypeDef *ADCx, uint8_t ADC_InjectedChannel, uint16_t Offset);
-uint16_t   ADC_GetInjectedConversionValue(ADC_TypeDef *ADCx, uint8_t ADC_InjectedChannel);
-void       ADC_AnalogWatchdogCmd(ADC_TypeDef *ADCx, uint32_t ADC_AnalogWatchdog);
-void       ADC_AnalogWatchdogThresholdsConfig(ADC_TypeDef *ADCx, uint16_t HighThreshold, uint16_t LowThreshold);
-void       ADC_AnalogWatchdogSingleChannelConfig(ADC_TypeDef *ADCx, uint8_t ADC_Channel);
-FlagStatus ADC_GetFlagStatus(ADC_TypeDef *ADCx, uint8_t ADC_FLAG);
-void       ADC_ClearFlag(ADC_TypeDef *ADCx, uint8_t ADC_FLAG);
-ITStatus   ADC_GetITStatus(ADC_TypeDef *ADCx, uint16_t ADC_IT);
-void       ADC_ClearITPendingBit(ADC_TypeDef *ADCx, uint16_t ADC_IT);
-void       ADC_Calibration_Vol(ADC_TypeDef *ADCx, uint32_t ADC_CALVOL);
-void       ADC_ExternalTrig_DLY(ADC_TypeDef *ADCx, uint32_t channel, uint16_t DelayTim);
+void       ADC_Cmd(ADC_PRegs *ADCx, FunctionalState NewState);
+void       ADC_DMACmd(ADC_PRegs *ADCx, FunctionalState NewState);
+void       ADC_ITConfig(ADC_PRegs *ADCx, uint16_t ADC_IT, FunctionalState NewState);
+void       ADC_ResetCalibration(ADC_PRegs *ADCx);
+FlagStatus ADC_GetResetCalibrationStatus(ADC_PRegs *ADCx);
+void       ADC_StartCalibration(ADC_PRegs *ADCx);
+FlagStatus ADC_GetCalibrationStatus(ADC_PRegs *ADCx);
+void       ADC_SoftwareStartConvCmd(ADC_PRegs *ADCx, FunctionalState NewState);
+FlagStatus ADC_GetSoftwareStartConvStatus(ADC_PRegs *ADCx);
+void       ADC_DiscModeChannelCountConfig(ADC_PRegs *ADCx, uint8_t Number);
+void       ADC_DiscModeCmd(ADC_PRegs *ADCx, FunctionalState NewState);
+void       ADC_RegularChannelConfig(ADC_PRegs *ADCx, uint8_t ADC_Channel, uint8_t Rank, uint8_t ADC_SampleTime);
+void       ADC_ExternalTrigConvCmd(ADC_PRegs *ADCx, FunctionalState NewState);
+uint16_t   ADC_GetConversionValue(ADC_PRegs *ADCx);
+void       ADC_AutoInjectedConvCmd(ADC_PRegs *ADCx, FunctionalState NewState);
+void       ADC_InjectedDiscModeCmd(ADC_PRegs *ADCx, FunctionalState NewState);
+void       ADC_ExternalTrigInjectedConvConfig(ADC_PRegs *ADCx, uint32_t ADC_ExternalTrigInjecConv);
+void       ADC_ExternalTrigInjectedConvCmd(ADC_PRegs *ADCx, FunctionalState NewState);
+void       ADC_SoftwareStartInjectedConvCmd(ADC_PRegs *ADCx, FunctionalState NewState);
+FlagStatus ADC_GetSoftwareStartInjectedConvCmdStatus(ADC_PRegs *ADCx);
+void       ADC_InjectedChannelConfig(ADC_PRegs *ADCx, uint8_t ADC_Channel, uint8_t Rank, uint8_t ADC_SampleTime);
+void       ADC_InjectedSequencerLengthConfig(ADC_PRegs *ADCx, uint8_t Length);
+void       ADC_SetInjectedOffset(ADC_PRegs *ADCx, uint8_t ADC_InjectedChannel, uint16_t Offset);
+uint16_t   ADC_GetInjectedConversionValue(ADC_PRegs *ADCx, uint8_t ADC_InjectedChannel);
+void       ADC_AnalogWatchdogCmd(ADC_PRegs *ADCx, uint32_t ADC_AnalogWatchdog);
+void       ADC_AnalogWatchdogThresholdsConfig(ADC_PRegs *ADCx, uint16_t HighThreshold, uint16_t LowThreshold);
+void       ADC_AnalogWatchdogSingleChannelConfig(ADC_PRegs *ADCx, uint8_t ADC_Channel);
+FlagStatus ADC_GetFlagStatus(ADC_PRegs *ADCx, uint8_t ADC_FLAG);
+void       ADC_ClearFlag(ADC_PRegs *ADCx, uint8_t ADC_FLAG);
+ITStatus   ADC_GetITStatus(ADC_PRegs *ADCx, uint16_t ADC_IT);
+void       ADC_ClearITPendingBit(ADC_PRegs *ADCx, uint16_t ADC_IT);
+void       ADC_Calibration_Vol(ADC_PRegs *ADCx, uint32_t ADC_CALVOL);
+void       ADC_ExternalTrig_DLY(ADC_PRegs *ADCx, uint32_t channel, uint16_t DelayTim);
 
 #ifdef __cplusplus
 }

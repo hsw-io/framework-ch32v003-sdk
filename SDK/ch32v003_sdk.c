@@ -1,6 +1,7 @@
 #include "ch32v003_sdk.h"
 
 void setup(Setup setup) {
+    NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
     set_sys_clock(setup.sysclk);
     // override nmi and hard_fault handlers
     // if (systemSetup.custom_nmi_handler_func != NULL) {
@@ -9,7 +10,4 @@ void setup(Setup setup) {
     // if (systemSetup.custom_hard_fault_handler_func != NULL) {
     //     hard_fault_handler_func = systemSetup.custom_hard_fault_handler_func;
     // }
-    for(size_t i=0; i < setup.gpios.len; i += 1) {
-        gpio_init(setup.gpios.pins_init[i]);
-    }
 }
